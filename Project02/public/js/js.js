@@ -264,6 +264,7 @@ class UI {
     //the message should disappear after 3 seconds
     setTimeout(function() {
       document.querySelector(".alert").remove();
+      location.reload();
     }, 6000);
   }
 
@@ -358,7 +359,6 @@ class Store {
     localStorage.setItem("videos", JSON.stringify(videos));
     //we need unfortunatelly at this point to refresh the page!
     //here is where we need to optimize. For 1000 videos takes around 3 seconds to update
-    // location.reload();
   }
 
   //in browser: it should download it direct to the storage folder! Important

@@ -1,8 +1,23 @@
+global._base = __dirname + "/public/storage";
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
 
+
 const server = http.createServer( (req, res) => {
+
+    // try {
+    //     fs.unlinkSync("table.json");
+    // } catch(err) {
+    //     console.log("Error, while deleting the file" +err);
+    // }
+    // try {
+    //     fs.renameSync("table(1).json");
+    // } catch(err) {
+    //     console.log("Error, while renaming the file" +err);
+    // }
+                    
+
     // if( req.url === "/") {
     //     fs.readFile(path.join(__dirname, "public", "index.html"), (err, content) => {
     //         if (err) throw err;
@@ -51,6 +66,8 @@ const server = http.createServer( (req, res) => {
         case ".jpg":
             contentType = "image/jpg";
             break;
+        
+        
     }
 
     // Read File
@@ -67,7 +84,38 @@ const server = http.createServer( (req, res) => {
                 res.writeHead(500);
                 res.end(`Server Error: ${err.code}`);
             }
-        } else {
+        } else 
+        {  
+            //check if a file exists
+            fs.exists("table (1).json", (exists) => {
+                if (exists) {
+                    console.log("yes!")
+                    fs.rename("table (1).json", "table.json", (err) => {
+                        console.log("Error while renaming the file: " + err);
+                    })
+                    // fs.unlink("table (1).json", (err) => {
+                    //     console.log("Error while deleting the file: " + err);
+                    // });
+                }
+            })
+                // // delete file
+    // fs.unlink("table.json", (err) => {
+    //     console.log("Error while deleting the file: " + err);
+    // });
+
+    // // // renaming
+    // fs.rename("table(1).json", "table.json", (err) => {
+    //     console.log("Error while renaming the file: " + err);
+    // })
+
+            // fs.rename(
+            //     path.join(__dirname, "/", "table(1).json"), 
+            //     path.join(__dirname, "/", "table.json"),
+            //     (err) => {
+            //         if(err) throw err;
+            //         console.log("File renamed...");  
+            //     }
+            // );
             // success
             res.writeHead(200, { "Content-Type": contentType});
             res.end(content, "utf8");

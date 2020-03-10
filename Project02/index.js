@@ -1,11 +1,8 @@
+const Logger = require("./logger");
 
 
+const logger = new Logger();
 
+logger.on("message", (data) => console.log("Called Listener", data));
 
-const Person = require("./person");
-
-// import Person from "./person"; //not available yet
-
-const person1 = new Person("John Doe", 30);
-person1.greeting();
-
+logger.log("Hello World");

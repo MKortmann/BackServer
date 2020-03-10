@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./lib/skeleton.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>KJP Videosystem</title>
+  <link rel="icon" href="./icons/kjpp3.png">
+</head>
+
+<body>
+
+  <h1 class="decoText">KJP Videosystem</h1>
+  <br>
+  <h6> Anzahl Datensätze am <span class="datum"></span>:&nbsp<span class="numberTotalOfVideos"></span></h6>
+  <!-- UI interface -->
+  <div class="bContainer">
+    <button class="deleteAllVideos noDisplay">Delete All Videos</button>
+    <button class="downloadVideoToJSON noDisplay">Download Videos to Table</button>
+    <button class="loadTableFromJSON noDisplay">Load Videos From Table</button>
+    <button class="webCam link tooltip"><a class="link" href="./html/videoCapture.html">Webcam</a></button>
+    <button class="openSelectVideoFile link tooltip">Video Auswählen
+      <span class="tooltiptext">Wählen Sie ein Video zum Hochladen aus</span>
+    </button>
+    <button class="toggleContainer link">Eingabeformular schließen</button>
+    <button class="videoLinkOld link">
+      <a href="file:///Q:/KJP-T-Videoarchiv/HD_Video/Intranet-HD-Video_Einzel.html" class="link tooltip archiv">Archiv
+        <!-- <a href="http://www.google.com" class="link tooltip archiv">Archiv -->
+        <span class="tooltiptext">Öffne die alten Videos Archiv-Homepage</span>
+      </a>
+    </button>
+    <!-- <button class="runBat">Run Bat File</button>
+  <button value="Launch Installer" onclick="window.open('http://127.0.0.1:8080/bat/run.txt')">openCMD</button> -->
+  </div>
+  <br>
+  <!-- Container for the form -->
+  <div class="container u-full-width">
+    <!-- Input Form -->
+    <form class="form">
+      <!-- Project Name & Video Title & Your Name -->
+      <div class=row>
+        <div class="four columns">
+          <label>Aufnahme Datum</label>
+          <input type="date" class="u-full-width videoDate">
+        </div>
+        <div class="four columns">
+          <label>Patient Name</label>
+          <input type="text" class="u-full-width patientName" placeholder="Nachname, Vorname">
+        </div>
+        <div class="four columns">
+          <label>PIZ</label>
+          <input type="number" min="11111111" max="99999999" class="u-full-width piz" placeholder="11111111">
+        </div>
+      </div>
+      <div class=row>
+        <div class="four columns">
+          <label>ICD_A</label>
+          <input type="number" min="0" max="999" class="u-full-width icdA" placeholder="80">
+        </div>
+        <div class="four columns">
+          <label>ICD_B</label>
+          <input type="number" min="0" max="999" class="u-full-width icdB" placeholder="80">
+        </div>
+        <div class="four columns">
+          <label>ICD_C</label>
+          <input type="number" min="0" max="999" class="u-full-width icdC" placeholder="80">
+        </div>
+      </div>
+
+      <div class="row containerCheckbox">
+        <div class="eight columns">
+          <div class="containerCheckbox">
+            <label>DS-Freigabe vorliegend: &nbsp </label>
+            <input type="checkbox" class="checkBoxCss dsf0">
+            <label for="dsf1"> DSF-1 &nbsp</label>
+            <input type="checkbox" class="checkBoxCss dsf1">
+            <label for="dsf2">DSF-2 &nbsp</label>
+            <input type="checkbox" class="checkBoxCss dsf2">
+            <label for="dsf3">DSF-3 &nbsp</label>
+            <input type="checkbox" class="checkBoxCss dsf3">
+            <label for="dsf4">DSF-4 &nbsp</label>
+            <input type="checkbox" class="checkBoxCss dsf4">
+            <label for="dsf5">DSF-5 &nbsp</label>
+            <input type="checkbox" class="checkBoxCss alle">
+            <label for="allesDsf">ALLE</label>
+          </div>
+          <span>Kurzanleitung: <input type="checkbox" checked></input>DSF-1 bedeutet:
+            DSF-1 vorliegen !</span>
+        </div>
+        <div class="four columns">
+          <label>Leitung Name</label>
+          <input type="text" class="u-full-width leitungName" placeholder="Nachname, Vorname">
+        </div>
+      </div>
+  </div>
+  <!-- Date, Time and Video Number -->
+  <div class="row">
+    <div class="four columns noDisplay">
+      <label>Time</label>
+      <input type="time" class="u-full-width videoTime">
+    </div>
+  </div>
+  <div>
+    <input class="button-primary u-full-width" id="submit" type="submit">
+  </div>
+  </form>
+  </div>
+  <!-- <p><a href="mailto:yourname@yourisp.com">Send me an email!</a></p> -->
+  Suchen auf dieser Seite mit [STRG] + F
+  <!-- <a href="http://10.245.91.26/support/login.php">Problem? </a> -->
+  <div class="container2">
+    <table class="u-full-width">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Datei Name</th>
+          <th>Video</th>
+          <th>Datum</th>
+          <th>Patient Name</th>
+          <th>PIZ</th>
+          <th>ICD_A</th>
+          <th>ICD_B</th>
+          <th>ICD_C</th>
+          <!-- <th>DS-Freigabe vorliegend</th> -->
+          <th>DSF-1</th>
+          <th>DSF-2</th>
+          <th>DSF-3</th>
+          <th>DSF-4</th>
+          <th>DSF-5</th>
+          <th>Leitung Name</th>
+          <th class="tooltip">Neu Laden
+            <span class="tooltiptext">Es lädt die Informationen in das Eingabefeld</span>
+          </th>
+          <th id="x">Löschen</th>
+        </tr>
+      </thead>
+      <tbody class="videoList">
+        <!--
+        <tr>
+          <td></td>
+        </tr>
+       -->
+      </tbody>
+    </table>
+
+    <br>
+
+    <footer>
+      <div>
+        <img class="admin" src="./icons/admin.svg" style="width:24px;height:18px;"></img>
+        <!-- <img class="admin" src="./icons/admin.svg" ></img> -->
+      </div>
+      KJP Videosystem - Developed by Marcelo Vitor Kortmann (2019-2020)
+    </footer>
+  </div>
+  <script src="./js/js.js"></script>
+</body>
+
+</html>

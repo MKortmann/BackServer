@@ -1,39 +1,9 @@
-global._base = __dirname + "/public/storage";
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
 
 
 const server = http.createServer( (req, res) => {
-
-    // try {
-    //     fs.unlinkSync("table.json");
-    // } catch(err) {
-    //     console.log("Error, while deleting the file" +err);
-    // }
-    // try {
-    //     fs.renameSync("table(1).json");
-    // } catch(err) {
-    //     console.log("Error, while renaming the file" +err);
-    // }
-                    
-
-    // if( req.url === "/") {
-    //     fs.readFile(path.join(__dirname, "public", "index.html"), (err, content) => {
-    //         if (err) throw err;
-    //         res.writeHead(200, { "Content-Type": "text/html" })
-    //         res.end(content);
-    //     })
-    // } 
-    
-    // if( req.url === "/api/users") {
-    //     const users = [
-    //         { name: "Bob Smith", age: 40},
-    //         { name: "John Doe", age: 20}
-    //     ];
-    //     res.writeHead( 200, { "Content-Type": "application/json"});
-    //     res.end(JSON.stringify(users));
-    // }
 
     // Build file path
     let filePath = path.join(__dirname, "public", req.url === "/" ? 
@@ -65,9 +35,7 @@ const server = http.createServer( (req, res) => {
             break;
         case ".jpg":
             contentType = "image/jpg";
-            break;
-        
-        
+            break;           
     }
 
     // Read File
@@ -87,35 +55,31 @@ const server = http.createServer( (req, res) => {
         } else 
         {  
             //check if a file exists
-            fs.exists("table (1).json", (exists) => {
+            
+            // // fs.exists("/public/table (1).json", (exists) => {
+            fs.exists(path.join(__dirname, "public", "table (1).json"), (exists) => {
                 if (exists) {
                     console.log("yes!")
-                    fs.rename("table (1).json", "table.json", (err) => {
-                        console.log("Error while renaming the file: " + err);
-                    })
-                    // fs.unlink("table (1).json", (err) => {
+                    try {
+                        fs.unlinkSync(path.join(__dirname, "public", "table.json"));
+                    } catch(err) {
+                        console.log("Error, while deleting the file" +err);
+                    }
+                    try {
+                        fs.renameSync(path.join(__dirname, "public", "table (1).json"), path.join(__dirname, "public", "table.json"))
+                    } catch(err) {
+                        console.log("Error, while renaming the file" +err);
+                    }
+
+                    // fs.rename(path.join(__dirname, "public", "table (1).json"), path.join(__dirname, "public", "table.json"), (err) => {
+                    //     console.log("Error while renaming the file: " + err);
+                    // })
+                    // fs.unlink(path.join(__dirname, "public", "table (1).json"), (err) => {
                     //     console.log("Error while deleting the file: " + err);
                     // });
                 }
             })
-                // // delete file
-    // fs.unlink("table.json", (err) => {
-    //     console.log("Error while deleting the file: " + err);
-    // });
 
-    // // // renaming
-    // fs.rename("table(1).json", "table.json", (err) => {
-    //     console.log("Error while renaming the file: " + err);
-    // })
-
-            // fs.rename(
-            //     path.join(__dirname, "/", "table(1).json"), 
-            //     path.join(__dirname, "/", "table.json"),
-            //     (err) => {
-            //         if(err) throw err;
-            //         console.log("File renamed...");  
-            //     }
-            // );
             // success
             res.writeHead(200, { "Content-Type": contentType});
             res.end(content, "utf8");

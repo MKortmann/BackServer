@@ -373,7 +373,7 @@ class Store {
     const fileJSON = JSON.stringify(videos);
 
     // let dataUri = 'data:./storage/json;charset=utf-8,'+ encodeURIComponent(fileJSON);
-    let dataUri = 'data:storage/json;charset=utf-8,' + encodeURIComponent(fileJSON);
+    let dataUri = 'data:/json;charset=utf-8,' + encodeURIComponent(fileJSON);
 
     let exportFileDefaultName = 'table.json';
 
@@ -414,7 +414,7 @@ class Store {
         document.querySelector(".numberTotalOfVideos").innerText = `${videos.length}`;
       }
     };
-    xhttp.open("GET", "./storage/table.json", true);
+    xhttp.open("GET", "./table.json", true);
 
     xhttp.onerror = function() {
       alert("Please, restart the live-server!!!, Error on XMLHttpRequest")
@@ -497,11 +497,24 @@ document.querySelector(".toggleContainer").addEventListener("click", function() 
  * list of videos will be filled.
  */
 document.addEventListener("DOMContentLoaded", () => {
+
+   //clearing the store data from local STORAGE
+   localStorage.clear();
+   globalDupAndLoadInf = {};
+   // document.querySelector(".videoList").remove();
+   let taskList = document.querySelector(".videoList");
+   if (taskList.children.length > 0) {
+     do {
+       taskList.children[taskList.children.length - 1].remove();
+     } while (taskList.children.length > 0);
+   }
+   Store.loadJSON();
+
   // getting the load time
   let t1 = performance.now();
   // get the actual data an displaying it!
   document.querySelector(".datum").innerText = ui.getActualDate();
-  Store.displayVideos();
+  // Store.displayVideos();
   //Load the input field with the actual date
   //reorganizing the data before to upload
   (function() {

@@ -455,7 +455,10 @@ document.querySelector(".loadTableFromJSON").addEventListener("click", function(
  * cleared!
  */
 document.querySelector(".downloadVideoToJSON").addEventListener("click", function() {
-  Store.downloadVideosToJSON();
+  let answer = confirm("Möchten Sie die Datei table.js laden?");
+  if (answer) {
+    Store.downloadVideosToJSON();
+  }
 });
 
 /* OPEN A DIALOG BOX TO SELECT A VIDEO
@@ -686,9 +689,20 @@ document.querySelector(".admin").addEventListener("click", () => {
 
 //adding possibility to delete all the videos
 document.querySelector(".deleteAllVideos").addEventListener("click", () => {
-  let t1 = performance.now();
-  localStorage.clear();
-  location.reload();
-  let t2 = performance.now();
-  console.log(`Clear Table & Load Page Time Elapsed: ${(t2-t1)/1000} seconds`);
+  // alert("this function is deaktivated!");
+  let answer = confirm("Möchten Sie ALLE VIDEOS wirklich löschen?");
+  if (answer) {
+    let t1 = performance.now();
+    localStorage.clear();
+    // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
+    // It basically load the localstorage to an variable, convert it to JSON and download it.
+    Store.downloadVideosToJSON();
+    // location.reload();
+    let t2 = performance.now();
+    console.log(`Clear Table & Load Page Time Elapsed: ${(t2-t1)/1000} seconds`);
+    // Reload the page to update the table(1).json to table.json
+    setTimeout(function() {
+      location.reload();
+    }, 500);
+  }
 })

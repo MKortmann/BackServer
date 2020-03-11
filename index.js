@@ -1,8 +1,14 @@
+/* To build a very simple server we will need theser three modules:
+http: allows us to use the http server/client
+path: The path module provides utilities for working with file and directory paths. 
+fs: The fs module provides an API for interacting with the file system.
+*/ 
 const http = require("http");
 const path = require("path");
 const fs = require("fs");
 
-
+// http.createServer([options][, requestListener])
+// more infos: https://nodejs.org/dist/latest-v12.x/docs/api/http.html#http_http_createserver_options_requestlistener
 const server = http.createServer( (req, res) => {
 
     // Build file path
@@ -16,7 +22,8 @@ const server = http.createServer( (req, res) => {
     // Initial content type
     let contentType = "text/html";
 
-    // Check ext and set content type
+    // Check ext and set content type: used to handle other datatypes! It is important, if not, 
+    // the page will not load correctly!
     switch(extname) {
         case ".js":
             contentType = "text/javascript";
@@ -40,6 +47,7 @@ const server = http.createServer( (req, res) => {
 
     // Read File
     fs.readFile(filePath, (err, content) => {
+        // handle errors
         if (err) {
             if (err.code == "ENOENT") {
                 // Page not found
@@ -54,9 +62,8 @@ const server = http.createServer( (req, res) => {
             }
         } else 
         {  
+            //if everything occurs fine:
             //check if a file exists
-            
-            // // fs.exists("/public/table (1).json", (exists) => {
             fs.exists(path.join(__dirname, "public", "table (1).json"), (exists) => {
                 if (exists) {
                     console.log("yes!")
@@ -70,7 +77,7 @@ const server = http.createServer( (req, res) => {
                     } catch(err) {
                         console.log("Error, while renaming the file" +err);
                     }
-
+                    //ASYNC:
                     // fs.rename(path.join(__dirname, "public", "table (1).json"), path.join(__dirname, "public", "table.json"), (err) => {
                     //     console.log("Error while renaming the file: " + err);
                     // })
@@ -87,5 +94,6 @@ const server = http.createServer( (req, res) => {
     });
 });
 
+// get the port availabe or 5000
 const PORT = process.env.PORT || 5000
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

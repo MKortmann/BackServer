@@ -214,6 +214,10 @@ class UI {
     // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
     // It basically load the localstorage to an variable, convert it to JSON and download it.
     Store.downloadVideosToJSON();
+    // Reload the page to update the table(1).json to table.json
+    setTimeout(function() {
+      location.reload();
+    }, 6000);
   }
   reloadVideoData(target) {
     const id = target.parentNode.rowIndex;
@@ -264,7 +268,6 @@ class UI {
     //the message should disappear after 3 seconds
     setTimeout(function() {
       document.querySelector(".alert").remove();
-      location.reload();
     }, 6000);
   }
 
@@ -566,6 +569,10 @@ document.querySelector("#submit").addEventListener("click", function(e) {
       ui.showAlert(`Hallo ${video.leitungName}, das Video: ${video.dateiName} ist hochgeladen!`, "success");
       // Clear Fields
       ui.clearFields();
+      // Reload the page to update the table(1).json to table.json
+      setTimeout(function() {
+        location.reload();
+      }, 6000);
     }
 
   }

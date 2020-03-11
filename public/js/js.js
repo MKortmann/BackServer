@@ -587,7 +587,12 @@ document.querySelector("#submit").addEventListener("click", function(e) {
  */
 document.querySelector(".videoList").addEventListener("click", function(e) {
   let t1 = performance.now();
-  if (e.target.parentElement.className === "delete") ui.deleteVideo(e.target.parentElement);
+  if (e.target.parentElement.className === "delete") {
+    let answer = confirm("Möchten Sie das Video wirklich löschen?");
+    if (answer) {
+      ui.deleteVideo(e.target.parentElement);
+    }
+  }
   let t2 = performance.now();
   console.log(`Delete Time Elapsed: ${(t2-t1)/1000} seconds`);
   if (e.target.parentElement.className === "reload") ui.reloadVideoData(e.target.parentElement)

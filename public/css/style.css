@@ -5,10 +5,35 @@ https://www.quackit.com/css/css_color_codes.cfm */
  * HEADER
 */
 
+/* Spinner */
+
+.loader {
+  display: relative;
+  margin: 8px auto;
+  width: 80px;
+  height: 80px;
+  border: 3px solid #6c33f0;
+  border-radius: 50%;
+  border-top-color: #f04e4e;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
 h1 {
   text-align: center;
   color: firebrick;
-  color: #33C3F0;
+  color: #33c3f0;
 }
 
 h6 {
@@ -30,7 +55,6 @@ h6 {
   margin-top: 10px;
   margin-bottom: 0;
 }
-
 
 /*
  * Buttons: user interface
@@ -66,7 +90,7 @@ h6 {
 }
 
 button:hover {
-  color: #0FA0CE;
+  color: #0fa0ce;
   font-size: 1.2em;
 }
 
@@ -144,7 +168,7 @@ label {
 }
 
 input {
-  font-size: 2.0rem;
+  font-size: 2rem;
 }
 
 /* Making the video Date & Time format as from skeleton */
@@ -153,7 +177,7 @@ input {
   height: 38px;
   padding: 6px 10px;
   background-color: #fff;
-  border: 1px solid #D1D1D1;
+  border: 1px solid #d1d1d1;
   border-radius: 4px;
   box-shadow: none;
   box-sizing: border-box;
@@ -168,14 +192,14 @@ input {
  * TABLE: list of videos (we will use in fact flexbox here)
 */
 table thead {
-  font-size: 2.0rem;
-  color: #33C3F0;
+  font-size: 2rem;
+  color: #33c3f0;
   color: black;
 }
 
 tbody tr:nth-child(even) {
   background-color: #9da3b0;
-  background-color: #33C3F0;
+  background-color: #33c3f0;
   /* font-weight: bold; */
   /* color: white; */
 }
@@ -186,7 +210,7 @@ tbody tr:nth-child(odd) {
 }
 
 tbody tr {
-  font-size: 2.0rem;
+  font-size: 2rem;
 }
 
 tbody {
@@ -196,7 +220,7 @@ tbody {
 table,
 th,
 td {
-  border: 1px solid #33C3F0;
+  border: 1px solid #33c3f0;
   border: 1px solid saddlebrown;
   border: 1px solid RosyBrown;
   border: 1px solid Peru;

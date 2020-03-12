@@ -257,7 +257,7 @@ class UI {
         // Reload the page to update the table(1).json to table.json
         setTimeout(function() {
           location.reload();
-        }, 6000);
+        }, 5000);
         ////////////////////
 
         //update the total number of videos!
@@ -313,23 +313,31 @@ class UI {
   }
 
   showAlert(message, className) {
-    //create div
+    //create div message
     const div = document.createElement("div");
+    //create div spinner
+    const divSpinnerInput = document.createElement("div");
     //add classes: the class alert is used to be able to remove it afterwards!
     div.className = `alert ${className}`;
+    divSpinnerInput.className = `loader`;
     // Add text
     div.appendChild(document.createTextNode(message));
+    // Add second text
+    divSpinnerInput.appendChild(document.createTextNode("...loading..."));
     // Get the element to be insert it
     const container = document.querySelector(".container");
     // get the element in which the div will be insert before it
     const form = document.querySelector(".form");
     // insert alert
     container.insertBefore(div, form);
+    // insert loading
+    container.insertBefore(divSpinnerInput, form);
 
     //the message should disappear after 3 seconds
     setTimeout(function() {
       document.querySelector(".alert").remove();
-    }, 3000);
+      document.querySelector(".loader").remove();
+    }, 6000);
   }
 
   //Writing the Date in the table in another format
@@ -688,7 +696,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           // Reload the page to update the table(1).json to table.json
           setTimeout(function() {
             location.reload();
-          }, 3000);
+          }, 5000);
         }
         ////////////////////////////////
 

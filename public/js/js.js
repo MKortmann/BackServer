@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 //TODO:
 // 3) button to change the order of displayed video
 // 4) able to reedit the entered informations
@@ -37,7 +37,6 @@
  * @summary KJP Video System concise functionality description.
  */
 
-
 /*
  * PART 1: INITIALIZATION/SETUP/STRUCTURE
  */
@@ -48,8 +47,15 @@
  * @class
  */
 class Video {
-  constructor(dateiName = "", videoDate = "", patientName = "", piz = "", icdABC = [],
-    dsfS = [], leitungName = "") {
+  constructor(
+    dateiName = "",
+    videoDate = "",
+    patientName = "",
+    piz = "",
+    icdABC = [],
+    dsfS = [],
+    leitungName = ""
+  ) {
     this.dateiName = dateiName;
     this.videoDate = videoDate;
     this.patientName = patientName;
@@ -67,7 +73,6 @@ class Video {
   }
 
   getFormData() {
-
     const videoDate = document.querySelector(".videoDate").value;
     const patientName = document.querySelector(".patientName").value;
     const piz = document.querySelector(".piz").value;
@@ -91,11 +96,11 @@ class Video {
     //adjusting the data to be displayed accordingly
     dsfS.forEach((item, index) => {
       if (item === true) {
-        dsfS[index] = "JA"
+        dsfS[index] = "JA";
       } else {
-        dsfS[index] = "NEIN"
+        dsfS[index] = "NEIN";
       }
-    })
+    });
 
     const leitungName = document.querySelector(".leitungName").value;
     const dateiName = document.querySelector(".openSelectVideoFile").innerText;
@@ -108,7 +113,7 @@ class Video {
     this.dsfS = dsfS;
     this.leitungName = leitungName;
   }
-};
+}
 //video object
 let video = new Video();
 //global object to check the video datei name. The same video should not be upload more
@@ -128,13 +133,12 @@ class UI {
     let day = today.getDate();
     // we have to add one to the month because zero is january!
     month++;
-    month = (month < 10) ? `0${month}` : month;
-    day = (day < 10) ? `0${day}` : day;
+    month = month < 10 ? `0${month}` : month;
+    day = day < 10 ? `0${day}` : day;
     return `${day}.${month}.${today.getFullYear()}`;
   }
   //add video to the table
   addVideoToList(video, index) {
-
     const videoList = document.querySelector(".videoList");
     // Create tr element
     const row = document.createElement("tr");
@@ -161,9 +165,15 @@ class UI {
         patientName: video.patientName,
         piz: video.piz,
         icdABC: [video.icdABC[0], video.icdABC[1], video.icdABC[2]],
-        dsfS: [video.dsfS[0], video.dsfS[1], video.dsfS[2], video.dsfS[3], video.dsfS[4]],
+        dsfS: [
+          video.dsfS[0],
+          video.dsfS[1],
+          video.dsfS[2],
+          video.dsfS[3],
+          video.dsfS[4]
+        ],
         leitungName: video.leitungName
-      }
+      };
       video["notStoreSkip"] = false;
     } else {
       //it will skip this video to avoid duplicate!
@@ -205,50 +215,93 @@ class UI {
   }
 
   deleteVideo(target) {
-    // remove it from the local Storage
-    Store.removeVideo(target);
-    //deleting video from UI
-    target.parentElement.remove();
-    // show the success message
-    ui.showAlert(`Das Video wurde gelöscht!`, "success");
-    // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
-    // It basically load the localstorage to an variable, convert it to JSON and download it.
-    Store.downloadVideosToJSON();
-    // Reload the page to update the table(1).json to table.json
-    setTimeout(function() {
-      location.reload();
-    }, 6000);
+    var xhttp = new XMLHttpRequest();
+    // we will use now onload instead of onreadystatechange. So we do not need
+    // to check for this.readyState
+    xhttp.onload = function() {
+      // xhttp.onreadystatechange = function() {
+      // readyState 4: the response has been capture and can be used
+      // status: http status of 200 means that everything is ok
+      var videoList = "";
+      // if (this.readyState == 4 && this.status == 200) {
+      if (this.status == 200) {
+        // Convert the json to and object
+        let videos = JSON.parse(xhttp.responseText);
+        // Storing the table in the Local Storage
+        localStorage.setItem("videos", JSON.stringify(videos));
+        // converting it to an array!
+        videos = Object.values(videos);
+        //loading the table ui: looping through the videos and add it!
+        videos.forEach(function(item, index) {
+          ui.addVideoToList(item, index);
+        });
+
+        /////////////////////
+        // remove it from the local Storage
+        Store.removeVideo(target);
+        //deleting video from UI
+        target.parentElement.remove();
+        // show the success message
+        ui.showAlert(`Das Video wurde gelöscht!`, "success");
+        // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
+        // It basically load the localstorage to an variable, convert it to JSON and download it.
+        Store.downloadVideosToJSON();
+        // Reload the page to update the table(1).json to table.json
+        setTimeout(function() {
+          location.reload();
+        }, 6000);
+        ////////////////////
+
+        //update the total number of videos!
+        document.querySelector(
+          ".numberTotalOfVideos"
+        ).innerText = `${videos.length}`;
+      }
+    };
+    xhttp.open("GET", "./table.json", true);
+
+    xhttp.onerror = function() {
+      alert("Please, restart the live-server!!!, Error on XMLHttpRequest");
+      console.log("Request error in XMLHttpRequest...");
+    };
+    xhttp.send();
   }
   reloadVideoData(target) {
     const id = target.parentNode.rowIndex;
-    document.querySelector(".videoDate").value = globalDupAndLoadInf[id].videoDate;
-    document.querySelector(".patientName").value = globalDupAndLoadInf[id].patientName;
+    document.querySelector(".videoDate").value =
+      globalDupAndLoadInf[id].videoDate;
+    document.querySelector(".patientName").value =
+      globalDupAndLoadInf[id].patientName;
     document.querySelector(".piz").value = globalDupAndLoadInf[id].piz;
-    document.querySelector(".leitungName").value = globalDupAndLoadInf[id].leitungName;
+    document.querySelector(".leitungName").value =
+      globalDupAndLoadInf[id].leitungName;
     document.querySelector(".icdA").value = globalDupAndLoadInf[id].icdABC[0];
-    if (globalDupAndLoadInf[id].icdABC[1] !== "X") document.querySelector(".icdB").value = globalDupAndLoadInf[id].icdABC[1];
-    if (globalDupAndLoadInf[id].icdABC[2] !== "X") document.querySelector(".icdC").value = globalDupAndLoadInf[id].icdABC[2];
+    if (globalDupAndLoadInf[id].icdABC[1] !== "X")
+      document.querySelector(".icdB").value = globalDupAndLoadInf[id].icdABC[1];
+    if (globalDupAndLoadInf[id].icdABC[2] !== "X")
+      document.querySelector(".icdC").value = globalDupAndLoadInf[id].icdABC[2];
     if (globalDupAndLoadInf[id].dsfS[0] === "JA") {
-      document.querySelector(".dsf0").checked = true
+      document.querySelector(".dsf0").checked = true;
     }
     if (globalDupAndLoadInf[id].dsfS[1] === "JA") {
-      document.querySelector(".dsf1").checked = true
+      document.querySelector(".dsf1").checked = true;
     }
     if (globalDupAndLoadInf[id].dsfS[2] === "JA") {
-      document.querySelector(".dsf2").checked = true
+      document.querySelector(".dsf2").checked = true;
     }
     if (globalDupAndLoadInf[id].dsfS[3] === "JA") {
-      document.querySelector(".dsf3").checked = true
+      document.querySelector(".dsf3").checked = true;
     }
     if (globalDupAndLoadInf[id].dsfS[4] === "JA") {
-      document.querySelector(".dsf4").checked = true
+      document.querySelector(".dsf4").checked = true;
     }
   }
   // Clear the input fields
   clearFields() {
     // clearing the form!
     document.querySelector(".form").reset();
-    document.querySelector(".openSelectVideoFile").innerText = "VIDEO AUSWÄHLEN";
+    document.querySelector(".openSelectVideoFile").innerText =
+      "VIDEO AUSWÄHLEN";
   }
 
   showAlert(message, className) {
@@ -279,7 +332,6 @@ class UI {
       year = [];
     let index = 0;
     stringArray.forEach(function(item) {
-
       if (index === 0) {
         year.push(item);
       } else if (index === 1) {
@@ -290,15 +342,12 @@ class UI {
       if (item === "-") {
         index++;
       }
-
     });
     // console.log(`${day[0]}${day[1]} / ${month[0]}${month[1]} / ${year[0]}${year[1]}${year[2]}${year[3]}`);
 
-    return `${day[0]}${day[1]} / ${month[0]}${month[1]} / ${year[0]}${year[1]}${year[2]}${year[3]}`
-
+    return `${day[0]}${day[1]} / ${month[0]}${month[1]} / ${year[0]}${year[1]}${year[2]}${year[3]}`;
   }
-
-}; //end of class UI
+} //end of class UI
 // ui object!
 const ui = new UI();
 
@@ -309,7 +358,6 @@ const ui = new UI();
  * @class
  */
 class Store {
-
   // Get Videos from LocalStorage or the total number of videos
   static getVideosFromLS(getTotalNumberOfVideos = false) {
     let videos;
@@ -329,12 +377,13 @@ class Store {
     //removing the keys and converting it to an array, then we can loop through it
     videos = Object.values(videos);
     videos.forEach((item, index) => {
-      ui.addVideoToList(item, index)
-    })
+      ui.addVideoToList(item, index);
+    });
 
     //update the total number of videos!
-    document.querySelector(".numberTotalOfVideos").innerText = `${videos.length}`;
-
+    document.querySelector(
+      ".numberTotalOfVideos"
+    ).innerText = `${videos.length}`;
   }
 
   // Add Video to localStorage: we get the stored videos, add the new (push), then
@@ -347,21 +396,24 @@ class Store {
   }
 
   static removeVideo(target) {
-
     let videos = Store.getVideosFromLS();
     // videos = Object.values(videos);
     let videoToDelete = target.parentElement.cells[1].innerText;
     //deleting the video from global temporary storage
-    globalDupAndLoadInf[videos[videoToDelete].dateiName] = undefined;
-    delete videos[videoToDelete];
-    //update the total number of videos!
-    // let totalNumberOfVideos = parseInt(document.querySelector(".numberTotalOfVideos").innerText)-1;
-    document.querySelector(".numberTotalOfVideos").innerText = `${Object.keys(videos).length}`;
-    //rewriting localStorage
-    // localStorage.clear();
-    localStorage.setItem("videos", JSON.stringify(videos));
-    //we need unfortunatelly at this point to refresh the page!
-    //here is where we need to optimize. For 1000 videos takes around 3 seconds to update
+    if (videos[videoToDelete] !== undefined) {
+      globalDupAndLoadInf[videos[videoToDelete].dateiName] = undefined;
+      delete videos[videoToDelete];
+      //update the total number of videos!
+      // let totalNumberOfVideos = parseInt(document.querySelector(".numberTotalOfVideos").innerText)-1;
+      document.querySelector(".numberTotalOfVideos").innerText = `${
+        Object.keys(videos).length
+      }`;
+      //rewriting localStorage
+      // localStorage.clear();
+      localStorage.setItem("videos", JSON.stringify(videos));
+      //we need unfortunatelly at this point to refresh the page!
+      //here is where we need to optimize. For 1000 videos takes around 3 seconds to update
+    }
   }
 
   //in browser: it should download it direct to the storage folder! Important
@@ -376,13 +428,13 @@ class Store {
     const fileJSON = JSON.stringify(videos);
 
     // let dataUri = 'data:./storage/json;charset=utf-8,'+ encodeURIComponent(fileJSON);
-    let dataUri = 'data:/json;charset=utf-8,' + encodeURIComponent(fileJSON);
+    let dataUri = "data:/json;charset=utf-8," + encodeURIComponent(fileJSON);
 
-    let exportFileDefaultName = 'table.json';
+    let exportFileDefaultName = "table.json";
 
-    let linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    let linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
     linkElement.remove();
   }
@@ -407,27 +459,27 @@ class Store {
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
-        videos = Object.values(videos)
+        videos = Object.values(videos);
         //loading the table ui: looping through the videos and add it!
         videos.forEach(function(item, index) {
           ui.addVideoToList(item, index);
         });
 
         //update the total number of videos!
-        document.querySelector(".numberTotalOfVideos").innerText = `${videos.length}`;
+        document.querySelector(
+          ".numberTotalOfVideos"
+        ).innerText = `${videos.length}`;
       }
     };
     xhttp.open("GET", "./table.json", true);
 
     xhttp.onerror = function() {
-      alert("Please, restart the live-server!!!, Error on XMLHttpRequest")
+      alert("Please, restart the live-server!!!, Error on XMLHttpRequest");
       console.log("Request error in XMLHttpRequest...");
-    }
+    };
     xhttp.send();
-
   }
 } //end of class storage
-
 
 /*
  * PART 2: User Interface Interaction/LOGIC
@@ -436,7 +488,82 @@ class Store {
  * As Backup it will load the JSON file! Necessary in case the Local Storage is
  * cleared!
  */
-document.querySelector(".loadTableFromJSON").addEventListener("click", function() {
+document
+  .querySelector(".loadTableFromJSON")
+  .addEventListener("click", function() {
+    //clearing the store data from local STORAGE
+    localStorage.clear();
+    globalDupAndLoadInf = {};
+    // document.querySelector(".videoList").remove();
+    let taskList = document.querySelector(".videoList");
+    if (taskList.children.length > 0) {
+      do {
+        taskList.children[taskList.children.length - 1].remove();
+      } while (taskList.children.length > 0);
+    }
+    Store.loadJSON();
+  });
+
+/* DOWNLOAD A VIDEO TO A JSON FILE
+ * As Backup it will load the JSON file! Necessary in case the Local Storage is
+ * cleared!
+ */
+document
+  .querySelector(".downloadVideoToJSON")
+  .addEventListener("click", function() {
+    let answer = confirm("Möchten Sie die Datei table.js laden?");
+    if (answer) {
+      Store.downloadVideosToJSON();
+    }
+  });
+
+/* OPEN A DIALOG BOX TO SELECT A VIDEO
+ * It opens a dialog box to be able to select the video to be stored. The info
+ * capture is the name, file and size of the video. The videos should be always in
+ * a specific folder already defined. In this case ./videos/*.mp4
+ * Why? Because of the restrictions/security added by all browsers!
+ * At this moment the video must be copy/save direct to the videos folder!
+ */
+document
+  .querySelector(".openSelectVideoFile")
+  .addEventListener("click", function() {
+    // open a file selection dialog: the folder path will be set always through the last
+    // added video. It is automatically and we cannot change here.
+    // Important: we need to get only the video data!
+    const input = document.createElement("input");
+    input.type = "file";
+    // handle the selected file
+    input.onchange = e => {
+      const file = e.target.files[0];
+      document.querySelector(".openSelectVideoFile").innerText = file.name;
+      video.getLocalVideoInfos(file.name, file.size, file.type);
+    };
+    input.click();
+  });
+
+/* REMOVE FORM FOR BETTER TABLE VISUALIZATION
+ * It toogles the form to be allowed to see only the table on the screen
+ */
+document
+  .querySelector(".toggleContainer")
+  .addEventListener("click", function() {
+    if (document.querySelector(".container").classList.contains("openClose")) {
+      document.querySelector(".toggleContainer").innerText =
+        "Eingabeformular schließen";
+      document.querySelector(".container").classList.toggle("openClose");
+    } else {
+      document.querySelector(".toggleContainer").innerText =
+        "Eingabeformular öffnen";
+      document.querySelector(".container").classList.toggle("openClose");
+    }
+  });
+
+//EXECUTED BY EACH PAGE REFRESH/LOAD
+/* DOM Load Event: InitializatioN
+ * It's a very important step. Here the localStorage will be retrieve and the table
+ * list of videos will be filled.
+ */
+document.addEventListener("DOMContentLoaded", () => {
   //clearing the store data from local STORAGE
   localStorage.clear();
   globalDupAndLoadInf = {};
@@ -448,73 +575,6 @@ document.querySelector(".loadTableFromJSON").addEventListener("click", function(
     } while (taskList.children.length > 0);
   }
   Store.loadJSON();
-});
-
-/* DOWNLOAD A VIDEO TO A JSON FILE
- * As Backup it will load the JSON file! Necessary in case the Local Storage is
- * cleared!
- */
-document.querySelector(".downloadVideoToJSON").addEventListener("click", function() {
-  let answer = confirm("Möchten Sie die Datei table.js laden?");
-  if (answer) {
-    Store.downloadVideosToJSON();
-  }
-});
-
-/* OPEN A DIALOG BOX TO SELECT A VIDEO
- * It opens a dialog box to be able to select the video to be stored. The info
- * capture is the name, file and size of the video. The videos should be always in
- * a specific folder already defined. In this case ./videos/*.mp4
- * Why? Because of the restrictions/security added by all browsers!
- * At this moment the video must be copy/save direct to the videos folder!
- */
-document.querySelector(".openSelectVideoFile").addEventListener("click", function() {
-
-  // open a file selection dialog: the folder path will be set always through the last
-  // added video. It is automatically and we cannot change here.
-  // Important: we need to get only the video data!
-  const input = document.createElement('input');
-  input.type = 'file';
-  // handle the selected file
-  input.onchange = e => {
-    const file = e.target.files[0];
-    document.querySelector(".openSelectVideoFile").innerText = file.name;
-    video.getLocalVideoInfos(file.name, file.size, file.type);
-  }
-  input.click();
-});
-
-/* REMOVE FORM FOR BETTER TABLE VISUALIZATION
- * It toogles the form to be allowed to see only the table on the screen
- */
-document.querySelector(".toggleContainer").addEventListener("click", function() {
-  if (document.querySelector(".container").classList.contains("openClose")) {
-    document.querySelector(".toggleContainer").innerText = "Eingabeformular schließen";
-    document.querySelector(".container").classList.toggle("openClose");
-  } else {
-    document.querySelector(".toggleContainer").innerText = "Eingabeformular öffnen";
-    document.querySelector(".container").classList.toggle("openClose");
-  }
-});
-
-//EXECUTED BY EACH PAGE REFRESH/LOAD
-/* DOM Load Event: InitializatioN
- * It's a very important step. Here the localStorage will be retrieve and the table
- * list of videos will be filled.
- */
-document.addEventListener("DOMContentLoaded", () => {
-
-   //clearing the store data from local STORAGE
-   localStorage.clear();
-   globalDupAndLoadInf = {};
-   // document.querySelector(".videoList").remove();
-   let taskList = document.querySelector(".videoList");
-   if (taskList.children.length > 0) {
-     do {
-       taskList.children[taskList.children.length - 1].remove();
-     } while (taskList.children.length > 0);
-   }
-   Store.loadJSON();
 
   // getting the load time
   let t1 = performance.now();
@@ -525,13 +585,13 @@ document.addEventListener("DOMContentLoaded", () => {
   //reorganizing the data before to upload
   (function() {
     var date = new Date().toISOString().substring(0, 10),
-      field = document.querySelector('.videoDate');
-    field.value = date
+      field = document.querySelector(".videoDate");
+    field.value = date;
     // console.log(field.value);
-  })()
+  })();
 
   let t2 = performance.now();
-  console.log(`Load Time Elapsed: ${(t2-t1)/1000} seconds`);
+  console.log(`Load Time Elapsed: ${(t2 - t1) / 1000} seconds`);
 });
 
 /* SUBMIT
@@ -552,37 +612,88 @@ document.querySelector("#submit").addEventListener("click", function(e) {
   if (video.dateiName === "VIDEO AUSWÄHLEN") {
     ui.showAlert("Bitte wählen Sie ein Video!", "error");
   } else if (video.dateiName.length > 20 || video.dateiName.length < 6) {
-    ui.showAlert(`Der Video Name: ${video.dateiName} muss zwischen 6 und 20 Zeichen enthalten!`, "error");
-  } else if (!validateDate(video.videoDate) || !validateName(video.patientName) || !validatePiz(video.piz) ||
-    !validateIcdABC(video.icdABC) || !validateDsfS(video.dsfS) || !validateName(video.leitungName)) {
+    ui.showAlert(
+      `Der Video Name: ${video.dateiName} muss zwischen 6 und 20 Zeichen enthalten!`,
+      "error"
+    );
+  } else if (
+    !validateDate(video.videoDate) ||
+    !validateName(video.patientName) ||
+    !validatePiz(video.piz) ||
+    !validateIcdABC(video.icdABC) ||
+    !validateDsfS(video.dsfS) ||
+    !validateName(video.leitungName)
+  ) {
     ui.showAlert("Bitte überprüfen Sie Ihre Eingaben!", "error");
   } else {
-    // Add video to the video list table
-    ui.addVideoToList(video, "false");
-    //the video will be not add in case of duplicate!
-    if (!video.notStoreSkip) {
-      // Add video to LocalStorage: it will load the local storage and push the new video
-      Store.addVideo(video);
-      //increment the number of videos in case of adding it
-      document.querySelector(".numberTotalOfVideos").innerText = `${Store.getVideosFromLS(true)}`;
-      // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
-      // It basically load the localstorage to an variable, convert it to JSON and download it.
-      Store.downloadVideosToJSON();
-      // Show sucess message
-      ui.showAlert(`Hallo ${video.leitungName}, das Video: ${video.dateiName} ist hochgeladen!`, "success");
-      // Clear Fields
-      ui.clearFields();
-      // Reload the page to update the table(1).json to table.json
-      setTimeout(function() {
-        location.reload();
-      }, 6000);
-    }
+    // Load LS and UI with the table.json
+    var xhttp = new XMLHttpRequest();
+    // we will use now onload instead of onreadystatechange. So we do not need
+    // to check for this.readyState
+    xhttp.onload = function() {
+      // xhttp.onreadystatechange = function() {
+      // readyState 4: the response has been capture and can be used
+      // status: http status of 200 means that everything is ok
+      var videoList = "";
+      // if (this.readyState == 4 && this.status == 200) {
+      if (this.status == 200) {
+        // Convert the json to and object
+        let videos = JSON.parse(xhttp.responseText);
+        // Storing the table in the Local Storage
+        localStorage.setItem("videos", JSON.stringify(videos));
+        // converting it to an array!
+        videos = Object.values(videos);
+        //loading the table ui: looping through the videos and add it!
+        videos.forEach(function(item, index) {
+          ui.addVideoToList(item, index);
+        });
 
+        /////////////////////////////////
+        // Add video to the video list table
+        ui.addVideoToList(video, "false");
+        //the video will be not add in case of duplicate!
+        if (!video.notStoreSkip) {
+          // Add video to LocalStorage: it will load the local storage and push the new video
+          Store.addVideo(video);
+          //increment the number of videos in case of adding it
+          document.querySelector(
+            ".numberTotalOfVideos"
+          ).innerText = `${Store.getVideosFromLS(true)}`;
+          // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
+          // It basically load the localstorage to an variable, convert it to JSON and download it.
+          Store.downloadVideosToJSON();
+          // Show sucess message
+          ui.showAlert(
+            `Hallo ${video.leitungName}, das Video: ${video.dateiName} ist hochgeladen!`,
+            "success"
+          );
+          // Clear Fields
+          ui.clearFields();
+          // Reload the page to update the table(1).json to table.json
+          setTimeout(function() {
+            location.reload();
+          }, 6000);
+        }
+        ////////////////////////////////
+
+        //update the total number of videos!
+        document.querySelector(
+          ".numberTotalOfVideos"
+        ).innerText = `${videos.length}`;
+      }
+    };
+    xhttp.open("GET", "./table.json", true);
+
+    xhttp.onerror = function() {
+      alert("Please, restart the live-server!!!, Error on XMLHttpRequest");
+      console.log("Request error in XMLHttpRequest...");
+    };
+    xhttp.send();
   }
   e.preventDefault();
 
   const t2 = performance.now();
-  console.log(`Submit Time Elapsed: ${(t2-t1)/1000} seconds.`)
+  console.log(`Submit Time Elapsed: ${(t2 - t1) / 1000} seconds.`);
 });
 /* DELETE THE VIDEO
  * If the user clicked in the X field, it will clear the video and update the
@@ -597,8 +708,9 @@ document.querySelector(".videoList").addEventListener("click", function(e) {
     }
   }
   let t2 = performance.now();
-  console.log(`Delete Time Elapsed: ${(t2-t1)/1000} seconds`);
-  if (e.target.parentElement.className === "reload") ui.reloadVideoData(e.target.parentElement)
+  console.log(`Delete Time Elapsed: ${(t2 - t1) / 1000} seconds`);
+  if (e.target.parentElement.className === "reload")
+    ui.reloadVideoData(e.target.parentElement);
 });
 
 /*
@@ -607,11 +719,14 @@ document.querySelector(".videoList").addEventListener("click", function(e) {
 // patientName should be only carachters the firstname, lastname FORMAT!!!
 function validateName(Name) {
   if (Name === "") {
-    Name = "Patient Name und Leitung Name"
-  };
+    Name = "Patient Name und Leitung Name";
+  }
   const re = /^([a-zA-Z]{2,16})\,[ ]([a-zA-Z]{3,16})$/;
   if (!re.test(Name)) {
-    ui.showAlert(`Der ${Name} sollte in diesem Format geschrieben sein: Nachname, Vorname! Der Vor- und Nachname muss zwischen 2 und 16 Zeichen enthalten!`, "error");
+    ui.showAlert(
+      `Der ${Name} sollte in diesem Format geschrieben sein: Nachname, Vorname! Der Vor- und Nachname muss zwischen 2 und 16 Zeichen enthalten!`,
+      "error"
+    );
   } else {
     return true;
   }
@@ -638,7 +753,10 @@ function validatePiz(piz) {
   */
   const re = /^[0-9]{8}$/;
   if (!re.test(piz)) {
-    ui.showAlert("Die Piz-Nummer muss zwischen 11111111 und 99999999 liegen", "error");
+    ui.showAlert(
+      "Die Piz-Nummer muss zwischen 11111111 und 99999999 liegen",
+      "error"
+    );
   } else {
     return true;
   }
@@ -659,33 +777,38 @@ function validateDsfS(dsfS) {
       return true;
     }
   }
-  ui.showAlert("Die Freigabe der Videoaufnahme dieses Patienten MUSS vorliegend sein", "error");
+  ui.showAlert(
+    "Die Freigabe der Videoaufnahme dieses Patienten MUSS vorliegend sein",
+    "error"
+  );
   return false;
 }
 
 /*adding eventlister to the checkboxALLE*/
 document.querySelector(".alle").addEventListener("input", () => {
   if (document.querySelector(".alle").checked === true) {
-    document.querySelector(".dsf0").checked = true
-    document.querySelector(".dsf1").checked = true
-    document.querySelector(".dsf2").checked = true
-    document.querySelector(".dsf3").checked = true
-    document.querySelector(".dsf4").checked = true
+    document.querySelector(".dsf0").checked = true;
+    document.querySelector(".dsf1").checked = true;
+    document.querySelector(".dsf2").checked = true;
+    document.querySelector(".dsf3").checked = true;
+    document.querySelector(".dsf4").checked = true;
   }
-})
+});
 
 /*Menu - fast solution*/
 /*Admin an administrator password to login*/
 document.querySelector(".admin").addEventListener("click", () => {
   let password = prompt("Please, enter the admin password");
-  if ( password === "wurzelAndroid!") {
+  if (password === "wurzelAndroid!") {
     document.querySelector(".deleteAllVideos").classList.toggle("noDisplay");
-    document.querySelector(".downloadVideoToJSON").classList.toggle("noDisplay");
+    document
+      .querySelector(".downloadVideoToJSON")
+      .classList.toggle("noDisplay");
     document.querySelector(".loadTableFromJSON").classList.toggle("noDisplay");
   } else {
     alert("The password is not correct!");
   }
-})
+});
 
 //adding possibility to delete all the videos
 document.querySelector(".deleteAllVideos").addEventListener("click", () => {
@@ -699,10 +822,12 @@ document.querySelector(".deleteAllVideos").addEventListener("click", () => {
     Store.downloadVideosToJSON();
     // location.reload();
     let t2 = performance.now();
-    console.log(`Clear Table & Load Page Time Elapsed: ${(t2-t1)/1000} seconds`);
+    console.log(
+      `Clear Table & Load Page Time Elapsed: ${(t2 - t1) / 1000} seconds`
+    );
     // Reload the page to update the table(1).json to table.json
     setTimeout(function() {
       location.reload();
     }, 500);
   }
-})
+});

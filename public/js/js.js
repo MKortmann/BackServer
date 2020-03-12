@@ -331,7 +331,13 @@ class UI {
     // insert alert
     container.insertBefore(div, form);
     // insert loading
-    container.insertBefore(divSpinnerInput, form);
+    if (className !== "error") {
+      container.insertBefore(divSpinnerInput, form);
+    }
+    // scroll to top (x-coord, y-coord)
+    window.scrollTo(0, 0);
+    // changing the background color
+    // document.querySelector("body").style.backgroundColor = "#137b85";
 
     //the message should disappear after 3 seconds
     setTimeout(function() {

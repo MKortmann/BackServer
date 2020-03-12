@@ -319,11 +319,11 @@ class UI {
     const divSpinnerInput = document.createElement("div");
     //add classes: the class alert is used to be able to remove it afterwards!
     div.className = `alert ${className}`;
-    divSpinnerInput.className = `loader`;
+    // divSpinnerInput.className = `loader`;
     // Add text
     div.appendChild(document.createTextNode(message));
     // Add second text
-    divSpinnerInput.appendChild(document.createTextNode("...loading..."));
+    // divSpinnerInput.appendChild(document.createTextNode("<h1>Loading...</h1>"));
     // Get the element to be insert it
     const container = document.querySelector(".container");
     // get the element in which the div will be insert before it
@@ -332,7 +332,8 @@ class UI {
     container.insertBefore(div, form);
     // insert loading
     if (className !== "error") {
-      container.insertBefore(divSpinnerInput, form);
+      document.querySelector("#fountainG").classList.remove("noDisplay");
+      document.querySelector(".decoText").innerText = "...Loading...";
     }
     // scroll to top (x-coord, y-coord)
     window.scrollTo(0, 0);

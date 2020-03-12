@@ -231,6 +231,14 @@ class UI {
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
         videos = Object.values(videos);
+        let taskList = document.querySelector(".videoList");
+        if (taskList.children.length > 0) {
+          do {
+            taskList.children[taskList.children.length - 1].remove();
+          } while (taskList.children.length > 0);
+        }
+        // clearing the global array
+        globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
         videos.forEach(function(item, index) {
           ui.addVideoToList(item, index);
@@ -321,7 +329,7 @@ class UI {
     //the message should disappear after 3 seconds
     setTimeout(function() {
       document.querySelector(".alert").remove();
-    }, 6000);
+    }, 3000);
   }
 
   //Writing the Date in the table in another format
@@ -643,6 +651,14 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
         videos = Object.values(videos);
+        let taskList = document.querySelector(".videoList");
+        if (taskList.children.length > 0) {
+          do {
+            taskList.children[taskList.children.length - 1].remove();
+          } while (taskList.children.length > 0);
+        }
+        // clearing the global array
+        globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
         videos.forEach(function(item, index) {
           ui.addVideoToList(item, index);
@@ -672,7 +688,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           // Reload the page to update the table(1).json to table.json
           setTimeout(function() {
             location.reload();
-          }, 6000);
+          }, 3000);
         }
         ////////////////////////////////
 

@@ -141,7 +141,7 @@ class UI {
   }
   //add Videos
   //totalNumOfVideos: set the max. number of videos to be displayed
-  addVideos(videos, totalNumOfVideos) {
+  addVideos(videos, totalNumOfVideos, reverseAddTable = false) {
     //start variable set the start. If we have less than 20 videos, then the start is 1
     let start = 1;
     if (videos.length >= totalNumOfVideos) {
@@ -149,12 +149,18 @@ class UI {
     }
     console.log("displayVideos");
 
-    for (let i = start; i <= videos.length; i++) {
-      ui.addVideoToList(videos[i - 1], i);
+    if (!reverseAddTable) {
+      for (let i = start; i <= videos.length; i++) {
+        ui.addVideoToList(videos[i - 1], i, reverseAddTable);
+      }
+    } else {
+      for (let i = videos.length; i >= start; i--) {
+        ui.addVideoToList(videos[i - 1], i, reverseAddTable);
+      }
     }
   }
   //add video to the table
-  addVideoToList(video, index) {
+  addVideoToList(video, index, reverseAddTable = false) {
     const videoList = document.querySelector(".videoList");
     // Create tr element
     const row = document.createElement("tr");
@@ -227,7 +233,12 @@ class UI {
     // videoList.appendChild(row);
     //appending the element in inverse order:
     // videoList.insertAdjacentElement("beforebegin", row)
-    videoList.prepend(row);
+    if (!reverseAddTable) {
+      videoList.prepend(row);
+    } else {
+      // videoList.insertAdjacentElement("beforebegin", row);
+      videoList.appendChild(row);
+    }
   }
 
   deleteVideo(target) {
@@ -413,12 +424,12 @@ class Store {
     return videos;
   }
 
-  static displayVideos() {
+  static displayVideos(reverseAddTable = false) {
     let videos = Store.getVideosFromLS();
     //removing the keys and converting it to an array, then we can loop through it
     videos = Object.values(videos);
 
-    ui.addVideos(videos, totalNumOfVideos);
+    ui.addVideos(videos, totalNumOfVideos, reverseAddTable);
     // videos.forEach((item, index) => {
     //   ui.addVideoToList(item, index);
     // });
@@ -507,7 +518,7 @@ class Store {
         // videos.forEach(function(item, index) {
         //   ui.addVideoToList(item, index);
         // });
-        ui.addVideos(videos, totalNumOfVideos);
+        ui.addVideos(videos, totalNumOfVideos, false);
 
         console.log("displayVideos");
 
@@ -705,7 +716,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         // videos.forEach(function(item, index) {
         //   ui.addVideoToList(item, index);
         // });
-        ui.addVideos(videos, totalNumOfVideos);
+        ui.addVideos(videos, totalNumOfVideos, false);
 
         /////////////////////////////////
         // Add video to the video list table
@@ -894,4 +905,14 @@ document.querySelector(".deleteAllVideos").addEventListener("click", () => {
 //reload page
 document.querySelector(".reload").addEventListener("click", () => {
   location.reload();
+});
+
+//show all videos
+document.querySelector(".showAllVideos").addEventListener("click", () => {
+  let videos = Store.getVideosFromLS();
+  //removing the keys and converting it to an array, then we can loop through it
+  videos = Object.values(videos);
+  totalNumOfVideos = videos.length;
+  const reverseAddTable = true;
+  Store.displayVideos(reverseAddTable);
 });

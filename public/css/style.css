@@ -244,7 +244,9 @@ h6 {
   display: none;
 }
 .bContainer {
-  text-align: center;
+  display: flex;
+  align-items: middle;
+  justify-content: center;
 }
 .checkBoxCss {
   width: 32px;
@@ -267,7 +269,6 @@ h6 {
 
 button:hover {
   color: #0fa0ce;
-  font-size: 1.2em;
 }
 
 .openClose {
@@ -297,13 +298,29 @@ button:hover {
   visibility: visible;
 }
 
+button {
+  padding: 0 17px;
+}
+
+.reload {
+  background: url("../icons/reload.svg") no-repeat;
+  background-color: white;
+  background-position: center;
+  border: 2px solid black;
+  margin-bottom: 0;
+}
+
+.reload:hover {
+  background-color: #0fa0ce;
+}
+
 /*
  * Messages to the user
 */
 /* used to be the ivon symbol. Used to detect when the user have clicked here */
 img {
   cursor: pointer;
-  height: 36px;
+  height: 64px;
   width: 48px;
 }
 

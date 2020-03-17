@@ -201,7 +201,7 @@ class UI {
       <td>${video.dsfS[4]}</td>
       <td>${video.leitungName}</td>
       <td class="reload">
-        <img src="./icons/reload.svg"></img>
+        <img src="./icons/inforeload.svg"></img>
       </td>
       <td  class="delete">
         <img src="./icons/delete.svg"></img>
@@ -611,6 +611,13 @@ document.addEventListener("DOMContentLoaded", () => {
       field = document.querySelector(".videoDate");
     field.value = date;
     // console.log(field.value);
+
+    const http = new EasyHTTP();
+    // // getting the data
+    http
+      .post(baseURL, "update")
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
   })();
 
   let t2 = performance.now();

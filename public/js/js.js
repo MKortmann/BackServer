@@ -176,7 +176,7 @@ class UI {
       // Video id
       // Get the total Number of Videos (true means: get only the total number of videos)
       // id = Store.getVideosFromLS(true) + 1;
-      id = videos.length;
+      id = videos.length + 1;
     } else {
       id = index;
     }
@@ -456,10 +456,11 @@ class Store {
 
   // Add Video to localStorage: we get the stored videos, add the new (push), then
   // set the localStorage again
-  static addVideo(video) {
-    let videos = Store.getVideosFromLS();
-    // add to LocalStorage
-    videos[video["dateiName"]] = video;
+  static addVideo(videos, video) {
+    // let videos = Store.getVideosFromLS();
+    // add to
+    // videos[video["dateiName"]] = video;
+    videos.push({ ...video });
     localStorage.setItem("videos", JSON.stringify(videos));
   }
 
@@ -715,15 +716,9 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
-        videos = Object.values(videos);
+        // let videos = Object.values(videosLS);
         // clearing the table
         UI.removeTableElements();
-        // let taskList = document.querySelector(".videoList");
-        // if (taskList.children.length > 0) {
-        //   do {
-        //     taskList.children[taskList.children.length - 1].remove();
-        //   } while (taskList.children.length > 0);
-        // }
         // clearing the global array
         globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
@@ -734,8 +729,8 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         ui.addVideoToList(videos, video, "false");
         //the video will be not add in case of duplicate!
         if (!video.notStoreSkip) {
-          // Add video to LocalStorage: it will load the local storage and push the new video
-          Store.addVideo(video);
+          // Add video to LocalStorage: push the new video to LocalStorage
+          Store.addVideo(videos, video);
           //increment the number of videos in case of adding it
           document.querySelector(
             ".numberTotalOfVideos"

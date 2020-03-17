@@ -299,7 +299,8 @@ button:hover {
 }
 
 button {
-  padding: 0 17px;
+  padding: 0 25px;
+  margin: 2px;
 }
 
 .reload {

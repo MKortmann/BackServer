@@ -120,6 +120,8 @@ let video = new Video();
 //than 2 times. It is also used to reload the information as soon as we clicked!
 // globalDupAndLoadInf = global Variable For Duplicates and Used To Load Information To Input Fields
 let globalDupAndLoadInf = {};
+// total number of videos to be displayed
+let totalNumOfVideos = 5;
 /**
  * Creates an UI object video with the necessary methods to manipulate the DOM.
  * @class
@@ -137,6 +139,20 @@ class UI {
     day = day < 10 ? `0${day}` : day;
     return `${day}.${month}.${today.getFullYear()}`;
   }
+  //add Videos
+  //totalNumOfVideos: set the max. number of videos to be displayed
+  addVideos(videos, totalNumOfVideos) {
+    //start variable set the start. If we have less than 20 videos, then the start is 1
+    let start = 1;
+    if (videos.length >= totalNumOfVideos) {
+      start = videos.length - totalNumOfVideos + 1;
+    }
+    console.log("displayVideos");
+
+    for (let i = start; i <= videos.length; i++) {
+      ui.addVideoToList(videos[i - 1], i);
+    }
+  }
   //add video to the table
   addVideoToList(video, index) {
     const videoList = document.querySelector(".videoList");
@@ -153,7 +169,7 @@ class UI {
       // Get the total Number of Videos (true means: get only the total number of videos)
       id = Store.getVideosFromLS(true) + 1;
     } else {
-      id = index + 1;
+      id = index;
     }
 
     video["id"] = id;
@@ -240,9 +256,10 @@ class UI {
         // clearing the global array
         globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
-        videos.forEach(function(item, index) {
-          ui.addVideoToList(item, index);
-        });
+        ui.addVideos(videos, totalNumOfVideos);
+        // videos.forEach(function(item, index) {
+        //   ui.addVideoToList(item, index);
+        // });
 
         /////////////////////
         // remove it from the local Storage
@@ -275,7 +292,8 @@ class UI {
     xhttp.send();
   }
   reloadVideoData(target) {
-    const id = target.parentNode.rowIndex;
+    // const id = target.parentNode.rowIndex;
+    const id = parseInt(target.parentElement.firstElementChild.innerText) - 1;
     document.querySelector(".videoDate").value =
       globalDupAndLoadInf[id].videoDate;
     document.querySelector(".patientName").value =
@@ -333,7 +351,7 @@ class UI {
     // insert loading
     if (className !== "error") {
       document.querySelector("#fountainG").classList.remove("noDisplay");
-      document.querySelector(".decoText").innerText = "...Loading...";
+      document.querySelector(".decoText").innerText = "Page wird geladen";
     }
     // scroll to top (x-coord, y-coord)
     window.scrollTo(0, 0);
@@ -399,9 +417,11 @@ class Store {
     let videos = Store.getVideosFromLS();
     //removing the keys and converting it to an array, then we can loop through it
     videos = Object.values(videos);
-    videos.forEach((item, index) => {
-      ui.addVideoToList(item, index);
-    });
+
+    ui.addVideos(videos, totalNumOfVideos);
+    // videos.forEach((item, index) => {
+    //   ui.addVideoToList(item, index);
+    // });
 
     //update the total number of videos!
     document.querySelector(
@@ -484,9 +504,16 @@ class Store {
         // converting it to an array!
         videos = Object.values(videos);
         //loading the table ui: looping through the videos and add it!
-        videos.forEach(function(item, index) {
-          ui.addVideoToList(item, index);
-        });
+        // videos.forEach(function(item, index) {
+        //   ui.addVideoToList(item, index);
+        // });
+        ui.addVideos(videos, totalNumOfVideos);
+
+        console.log("displayVideos");
+
+        // for (let i = min; i < videos.length; i++) {
+        //   ui.addVideoToList(video[i], i);
+        // }
 
         //update the total number of videos!
         document.querySelector(
@@ -591,12 +618,12 @@ document.addEventListener("DOMContentLoaded", () => {
   localStorage.clear();
   globalDupAndLoadInf = {};
   // document.querySelector(".videoList").remove();
-  let taskList = document.querySelector(".videoList");
-  if (taskList.children.length > 0) {
-    do {
-      taskList.children[taskList.children.length - 1].remove();
-    } while (taskList.children.length > 0);
-  }
+  // let taskList = document.querySelector(".videoList");
+  // if (taskList.children.length > 0) {
+  //   do {
+  //     taskList.children[taskList.children.length - 1].remove();
+  //   } while (taskList.children.length > 0);
+  // }
   Store.loadJSON();
 
   // getting the load time
@@ -611,13 +638,6 @@ document.addEventListener("DOMContentLoaded", () => {
       field = document.querySelector(".videoDate");
     field.value = date;
     // console.log(field.value);
-
-    const http = new EasyHTTP();
-    // // getting the data
-    http
-      .post(baseURL, "update")
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
   })();
 
   let t2 = performance.now();
@@ -682,9 +702,10 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         // clearing the global array
         globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
-        videos.forEach(function(item, index) {
-          ui.addVideoToList(item, index);
-        });
+        // videos.forEach(function(item, index) {
+        //   ui.addVideoToList(item, index);
+        // });
+        ui.addVideos(videos, totalNumOfVideos);
 
         /////////////////////////////////
         // Add video to the video list table
@@ -747,7 +768,7 @@ document.querySelector(".videoList").addEventListener("click", function(e) {
   }
   let t2 = performance.now();
   console.log(`Delete Time Elapsed: ${(t2 - t1) / 1000} seconds`);
-  if (e.target.parentElement.className === "reload")
+  if (e.target.parentElement.className === "infosreload")
     ui.reloadVideoData(e.target.parentElement);
 });
 

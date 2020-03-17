@@ -488,11 +488,13 @@ class Store {
   //in browser: it should download it direct to the storage folder! Important
   //because here we do not have access to local storage and to simplify I do not
   //want to use a backserver with Node.js that it is still an option!
-  static downloadVideosToJSON() {
+  static downloadVideosToJSON(videos = false) {
     // Save as file
     // trying to save it as a file
     /*setting*/
-    const videos = Store.getVideosFromLS();
+    if (!videos) {
+      const videos = Store.getVideosFromLS();
+    }
     // videos = Object.values(videos);
     const fileJSON = JSON.stringify(videos);
 
@@ -734,10 +736,10 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           //increment the number of videos in case of adding it
           document.querySelector(
             ".numberTotalOfVideos"
-          ).innerText = `${Store.getVideosFromLS(true)}`;
+          ).innerText = `${videos.length}`;
           // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
           // It basically load the localstorage to an variable, convert it to JSON and download it.
-          Store.downloadVideosToJSON();
+          Store.downloadVideosToJSON(videos);
           // Show sucess message
           ui.showAlert(
             `Hallo ${video.leitungName}, das Video: ${video.dateiName} ist hochgeladen!`,

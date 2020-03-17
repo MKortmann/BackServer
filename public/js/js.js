@@ -561,17 +561,21 @@ class Store {
 document
   .querySelector(".loadTableFromJSON")
   .addEventListener("click", function() {
-    //clearing the store data from local STORAGE
-    localStorage.clear();
-    globalDupAndLoadInf = {};
-    // document.querySelector(".videoList").remove();
-    let taskList = document.querySelector(".videoList");
-    if (taskList.children.length > 0) {
-      do {
-        taskList.children[taskList.children.length - 1].remove();
-      } while (taskList.children.length > 0);
+    let answer = confirm("Möchten Sie die Datei table.js laden?");
+    if (answer) {
+      //clearing the store data from local STORAGE
+      localStorage.clear();
+      globalDupAndLoadInf = {};
+      // document.querySelector(".videoList").remove();
+      // First we need to clear the table deleting everything!
+      let taskList = document.querySelector(".videoList");
+      if (taskList.children.length > 0) {
+        do {
+          taskList.children[taskList.children.length - 1].remove();
+        } while (taskList.children.length > 0);
+      }
+      Store.loadJSON();
     }
-    Store.loadJSON();
   });
 
 /* DOWNLOAD A VIDEO TO A JSON FILE
@@ -581,7 +585,7 @@ document
 document
   .querySelector(".downloadVideoToJSON")
   .addEventListener("click", function() {
-    let answer = confirm("Möchten Sie die Datei table.js laden?");
+    let answer = confirm("Möchten Sie die Datei table.js herunterladen?");
     if (answer) {
       Store.downloadVideosToJSON();
     }
@@ -878,7 +882,9 @@ document.querySelector(".alle").addEventListener("input", () => {
 /*Admin an administrator password to login*/
 document.querySelector(".admin").addEventListener("click", () => {
   let password = prompt("Please, enter the admin password");
-  if (password === "wurzelAndroid!") {
+  if (password === null) {
+    return;
+  } else if (password === "wurzelAndroid!") {
     document.querySelector(".deleteAllVideos").classList.toggle("noDisplay");
     document
       .querySelector(".downloadVideoToJSON")

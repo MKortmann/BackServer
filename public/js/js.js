@@ -151,18 +151,18 @@ class UI {
 
     if (!reverseAddTable) {
       for (let i = start; i <= videos.length; i++) {
-        ui.addVideoToList(videos[i - 1], i, reverseAddTable);
+        ui.addVideoToList(videos, videos[i - 1], i, reverseAddTable);
       }
     } else {
       //it comes here in the case that we want to show all videos. We have to invert the loop
       //in order to display the videos correctly!
       for (let i = videos.length; i >= start; i--) {
-        ui.addVideoToList(videos[i - 1], i, reverseAddTable);
+        ui.addVideoToList(videos, videos[i - 1], i, reverseAddTable);
       }
     }
   }
   //add video to the table
-  addVideoToList(video, index, reverseAddTable = false) {
+  addVideoToList(videos, video, index, reverseAddTable = false) {
     const videoList = document.querySelector(".videoList");
     // Create tr element
     const row = document.createElement("tr");
@@ -175,7 +175,8 @@ class UI {
       // id = document.querySelector(".videoList").childElementCount + 1;
       // Video id
       // Get the total Number of Videos (true means: get only the total number of videos)
-      id = Store.getVideosFromLS(true) + 1;
+      // id = Store.getVideosFromLS(true) + 1;
+      id = videos.length;
     } else {
       id = index;
     }
@@ -265,20 +266,18 @@ class UI {
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
         videos = Object.values(videos);
-        let taskList = document.querySelector(".videoList");
-        if (taskList.children.length > 0) {
-          do {
-            taskList.children[taskList.children.length - 1].remove();
-          } while (taskList.children.length > 0);
-        }
+        // table clear!
+        UI.removeTableElements();
+        // let taskList = document.querySelector(".videoList");
+        // if (taskList.children.length > 0) {
+        //   do {
+        //     taskList.children[taskList.children.length - 1].remove();
+        //   } while (taskList.children.length > 0);
+        // }
         // clearing the global array
         globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
         ui.addVideos(videos, totalNumOfVideos);
-        // videos.forEach(function(item, index) {
-        //   ui.addVideoToList(item, index);
-        // });
-
         /////////////////////
         // remove it from the local Storage
         Store.removeVideo(target);
@@ -385,6 +384,16 @@ class UI {
     }, 6000);
   }
 
+  //remove table elements
+  static removeTableElements() {
+    let taskList = document.querySelector(".videoList");
+    if (taskList.children.length > 0) {
+      do {
+        taskList.children[taskList.children.length - 1].remove();
+      } while (taskList.children.length > 0);
+    }
+  }
+
   //Writing the Date in the table in another format
   newDateFormat(date) {
     let stringArray = date.split("");
@@ -439,10 +448,6 @@ class Store {
     videos = Object.values(videos);
 
     ui.addVideos(videos, totalNumOfVideos, reverseAddTable);
-    // videos.forEach((item, index) => {
-    //   ui.addVideoToList(item, index);
-    // });
-
     //update the total number of videos!
     document.querySelector(
       ".numberTotalOfVideos"
@@ -524,16 +529,9 @@ class Store {
         // converting it to an array!
         videos = Object.values(videos);
         //loading the table ui: looping through the videos and add it!
-        // videos.forEach(function(item, index) {
-        //   ui.addVideoToList(item, index);
-        // });
         ui.addVideos(videos, totalNumOfVideos, false);
 
         console.log("displayVideos");
-
-        // for (let i = min; i < videos.length; i++) {
-        //   ui.addVideoToList(video[i], i);
-        // }
 
         //update the total number of videos!
         document.querySelector(
@@ -568,12 +566,13 @@ document
       globalDupAndLoadInf = {};
       // document.querySelector(".videoList").remove();
       // First we need to clear the table deleting everything!
-      let taskList = document.querySelector(".videoList");
-      if (taskList.children.length > 0) {
-        do {
-          taskList.children[taskList.children.length - 1].remove();
-        } while (taskList.children.length > 0);
-      }
+      UI.removeTableElements();
+      // let taskList = document.querySelector(".videoList");
+      // if (taskList.children.length > 0) {
+      //   do {
+      //     taskList.children[taskList.children.length - 1].remove();
+      //   } while (taskList.children.length > 0);
+      // }
       Store.loadJSON();
     }
   });
@@ -717,23 +716,22 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
         videos = Object.values(videos);
-        let taskList = document.querySelector(".videoList");
-        if (taskList.children.length > 0) {
-          do {
-            taskList.children[taskList.children.length - 1].remove();
-          } while (taskList.children.length > 0);
-        }
+        // clearing the table
+        UI.removeTableElements();
+        // let taskList = document.querySelector(".videoList");
+        // if (taskList.children.length > 0) {
+        //   do {
+        //     taskList.children[taskList.children.length - 1].remove();
+        //   } while (taskList.children.length > 0);
+        // }
         // clearing the global array
         globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
-        // videos.forEach(function(item, index) {
-        //   ui.addVideoToList(item, index);
-        // });
         ui.addVideos(videos, totalNumOfVideos, false);
 
         /////////////////////////////////
         // Add video to the video list table
-        ui.addVideoToList(video, "false");
+        ui.addVideoToList(videos, video, "false");
         //the video will be not add in case of duplicate!
         if (!video.notStoreSkip) {
           // Add video to LocalStorage: it will load the local storage and push the new video

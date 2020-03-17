@@ -301,13 +301,14 @@ button:hover {
 button {
   padding: 0 25px;
   margin: 2px;
+  cursor: pointer;
 }
 
 .reload {
   background: url("../icons/reload.svg") no-repeat;
   background-color: white;
   background-position: center;
-  border: 2px solid black;
+  /* border: 1px solid black; */
   margin-bottom: 0;
 }
 

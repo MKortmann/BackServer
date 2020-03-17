@@ -312,7 +312,7 @@ class UI {
   }
   reloadVideoData(target) {
     // const id = target.parentNode.rowIndex;
-    const id = parseInt(target.parentElement.firstElementChild.innerText) - 1;
+    const id = parseInt(target.parentElement.firstElementChild.innerText);
     document.querySelector(".videoDate").value =
       globalDupAndLoadInf[id].videoDate;
     document.querySelector(".patientName").value =
@@ -530,7 +530,7 @@ class Store {
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
-        videos = Object.values(videos);
+        // videos = Object.values(videos);
         //loading the table ui: looping through the videos and add it!
         ui.addVideos(videos, totalNumOfVideos, false);
 

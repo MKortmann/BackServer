@@ -154,6 +154,8 @@ class UI {
         ui.addVideoToList(videos[i - 1], i, reverseAddTable);
       }
     } else {
+      //it comes here in the case that we want to show all videos. We have to invert the loop
+      //in order to display the videos correctly!
       for (let i = videos.length; i >= start; i--) {
         ui.addVideoToList(videos[i - 1], i, reverseAddTable);
       }
@@ -199,7 +201,12 @@ class UI {
       video["notStoreSkip"] = false;
     } else {
       //it will skip this video to avoid duplicate!
-      this.showAlert("Dieses Video wurde bereits hochgeladen!", "error");
+      if (!reverseAddTable) {
+        //this message will be show only IF YOU DO NOT CLICK IN SHOW ALL VIDEOS!!
+        //Because show all videos load the videos that are already loaded!
+        this.showAlert("Dieses Video wurde bereits hochgeladen!", "error");
+      }
+
       video["notStoreSkip"] = true;
       //quiting
       return;
@@ -297,7 +304,9 @@ class UI {
     xhttp.open("GET", "./table.json", true);
 
     xhttp.onerror = function() {
-      alert("Please, restart the live-server!!!, Error on XMLHttpRequest");
+      alert(
+        "Please, restart the localserver in terminal! Open the App-folder with cmd and type: node index .Error on XMLHttpRequest"
+      );
       console.log("Request error in XMLHttpRequest...");
     };
     xhttp.send();

@@ -200,8 +200,8 @@ class UI {
       <td>${video.dsfS[3]}</td>
       <td>${video.dsfS[4]}</td>
       <td>${video.leitungName}</td>
-      <td class="reload">
-        <img src="./icons/inforeload.svg"></img>
+      <td class="infosreload">
+        <img src="./icons/infosreload.svg"></img>
       </td>
       <td  class="delete">
         <img src="./icons/delete.svg"></img>
@@ -868,4 +868,9 @@ document.querySelector(".deleteAllVideos").addEventListener("click", () => {
       location.reload();
     }, 500);
   }
+});
+
+//reload page
+document.querySelector(".reload").addEventListener("click", () => {
+  location.reload();
 });

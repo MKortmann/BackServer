@@ -294,10 +294,6 @@ class UI {
         setTimeout(function() {
           location.reload();
         }, 5000);
-        ////////////////////
-
-        //update the total number of videos!
-        ui.displayTotalNumberOfVideos();
       }
     };
     xhttp.open("GET", "./table.json", true);
@@ -481,7 +477,7 @@ class Store {
       delete videos[videoToDelete];
       //update the total number of videos!
       // let totalNumberOfVideos = parseInt(document.querySelector(".numberTotalOfVideos").innerText)-1;
-      ui.displayTotalNumberOfVideos(Object.values(videos));
+      ui.displayTotalNumberOfVideos(videos);
       //rewriting localStorage
       // localStorage.clear();
       localStorage.setItem("videos", JSON.stringify(videos));

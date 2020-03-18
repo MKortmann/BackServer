@@ -281,10 +281,10 @@ class UI {
         //loading the table ui: looping through the videos and add it!
         ui.addVideos(videos, totalNumOfVideos);
         /////////////////////
-        // remove it from the local Storage
-        Store.removeVideo(target);
+        // remove it from the local Storage and update the videos variable
+        videos = Store.removeVideo(videos, target);
         //deleting video from UI
-        target.parentElement.remove();
+        // target.parentElement.remove();
         // show the success message
         ui.showAlert(`Das Video wurde gelöscht!`, "success");
         // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
@@ -471,8 +471,8 @@ class Store {
     localStorage.setItem("videos", JSON.stringify(videos));
   }
 
-  static removeVideo(target) {
-    let videos = Store.getVideosFromLS();
+  static removeVideo(videos, target) {
+    // let videos = Store.getVideosFromLS();
     // videos = Object.values(videos);
     let videoToDelete = target.parentElement.cells[1].innerText;
     //deleting the video from global temporary storage
@@ -488,6 +488,7 @@ class Store {
       //we need unfortunatelly at this point to refresh the page!
       //here is where we need to optimize. For 1000 videos takes around 3 seconds to update
     }
+    return videos;
   }
 
   //in browser: it should download it direct to the storage folder! Important
@@ -781,6 +782,9 @@ document.querySelector(".videoList").addEventListener("click", function(e) {
   if (e.target.parentElement.className === "delete") {
     let answer = confirm("Möchten Sie das Video wirklich löschen?");
     if (answer) {
+      // let passTarget = e.target.parentElement;
+      //deleting already
+      // e.target.parentElement.parentElement.remove();
       ui.deleteVideo(e.target.parentElement);
     }
   }

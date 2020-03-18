@@ -1,12 +1,4 @@
 "use strict";
-//TODO:
-// 3) button to change the order of displayed video
-// 4) able to reedit the entered informations
-// 5) ablet to refill the inputs with the last add or clickesd information
-// 6) Future: load videos from json: it should open a new window with the table of saves file.
-// the user should click it and it will be reload from this data.
-// Now should be able to open a window to select the specific file.
-
 /**
  * The code is composed and written in the order below:
  * PART 1: INITIALIZATION/SETUP/STRUCTURE
@@ -42,7 +34,7 @@
  */
 
 /**
- * Creates an object video with the respective informations as
+ * Creates an object video with the respective informations of a single video as
  * dateiName, videoDate, title and so on.
  * @class
  */
@@ -66,12 +58,14 @@ class Video {
     this.leitungName = "";
   }
 
+  //function called when you select a video
   getLocalVideoInfos(name, size, type) {
     this.videoName = name;
     this.videoSize = size;
     this.videoType = type;
   }
 
+  //get information of the input fields
   getFormData() {
     const videoDate = document.querySelector(".videoDate").value;
     const patientName = document.querySelector(".patientName").value;
@@ -114,6 +108,10 @@ class Video {
     this.leitungName = leitungName;
   }
 }
+/**
+ * GLOBAL OBJECTS & VARIABLES.
+ *
+ */
 //video object
 let video = new Video();
 //global object to check the video datei name. The same video should not be upload more
@@ -121,9 +119,9 @@ let video = new Video();
 // globalDupAndLoadInf = global Variable For Duplicates and Used To Load Information To Input Fields
 let globalDupAndLoadInf = {};
 // total number of videos to be displayed
-let totalNumOfVideos = 5;
+let totalNumOfVideos = 20;
 /**
- * Creates an UI object video with the necessary methods to manipulate the DOM.
+ * Creates an UI object video with the necessary methods to manipulate the DOM (Document Object Model).
  * @class
  */
 class UI {
@@ -140,7 +138,7 @@ class UI {
     return `${day}.${month}.${today.getFullYear()}`;
   }
   //add Videos
-  //totalNumOfVideos: set the max. number of videos to be displayed
+  //totalNumOfVideos: set the max. number of videos to be displayed, used also to display more videos
   addVideos(videos, totalNumOfVideos, reverseAddTable = false) {
     //start variable set the start. If we have less than 20 videos, then the start is 1
     let start = 1;
@@ -149,7 +147,6 @@ class UI {
     if (videos.length >= totalNumOfVideos) {
       start = videos.length - totalNumOfVideos + 1;
     }
-    console.log("displayVideos");
 
     if (!reverseAddTable) {
       for (let i = start; i <= videos.length; i++) {
@@ -163,7 +160,7 @@ class UI {
       }
     }
   }
-  //add video to the table
+  //add single video to the table with their respective id
   addVideoToList(videos, video, index, reverseAddTable = false) {
     const videoList = document.querySelector(".videoList");
     // Create tr element
@@ -174,10 +171,7 @@ class UI {
     // index tells if you start from 1 and go through the loop adding the ids
     // if is true, means that we have add a video and we need only to increment the last index number
     if (index === "false") {
-      // id = document.querySelector(".videoList").childElementCount + 1;
       // Video id
-      // Get the total Number of Videos (true means: get only the total number of videos)
-      // id = Store.getVideosFromLS(true) + 1;
       id = Object.values(videos).length + 1;
     } else {
       id = index;
@@ -239,14 +233,10 @@ class UI {
         <img src="./icons/delete.svg"></img>
       </td>
     `;
-    //append element
-    // videoList.appendChild(row);
     //appending the element in inverse order:
-    // videoList.insertAdjacentElement("beforebegin", row)
     if (!reverseAddTable) {
       videoList.prepend(row);
     } else {
-      // videoList.insertAdjacentElement("beforebegin", row);
       videoList.appendChild(row);
     }
   }
@@ -266,16 +256,8 @@ class UI {
         let videos = JSON.parse(xhttp.responseText);
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
-        // converting it to an array!
-        // videos = Object.values(videos);
         // table clear!
         UI.removeTableElements();
-        // let taskList = document.querySelector(".videoList");
-        // if (taskList.children.length > 0) {
-        //   do {
-        //     taskList.children[taskList.children.length - 1].remove();
-        //   } while (taskList.children.length > 0);
-        // }
         // clearing the global array
         globalDupAndLoadInf = {};
         //loading the table ui: looping through the videos and add it!
@@ -283,8 +265,6 @@ class UI {
         /////////////////////
         // remove it from the local Storage and update the videos variable
         videos = Store.removeVideo(videos, target);
-        //deleting video from UI
-        // target.parentElement.remove();
         // show the success message
         ui.showAlert(`Das Video wurde gelöscht!`, "success");
         // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
@@ -300,14 +280,13 @@ class UI {
 
     xhttp.onerror = function() {
       alert(
-        "Please, restart the localserver in terminal! Open the App-folder with cmd and type: node index .Error on XMLHttpRequest"
+        "Please, restart the localserver in terminal! Open the App-Root-Folder with cmd and type: node index .Error on XMLHttpRequest"
       );
       console.log("Request error in XMLHttpRequest...");
     };
     xhttp.send();
   }
   reloadVideoData(target) {
-    // const id = target.parentNode.rowIndex;
     const id = parseInt(target.parentElement.firstElementChild.innerText);
     document.querySelector(".videoDate").value =
       globalDupAndLoadInf[id].videoDate;
@@ -352,7 +331,6 @@ class UI {
     const divSpinnerInput = document.createElement("div");
     //add classes: the class alert is used to be able to remove it afterwards!
     div.className = `alert ${className}`;
-    // divSpinnerInput.className = `loader`;
     // Add text
     div.appendChild(document.createTextNode(message));
     // Add second text
@@ -377,7 +355,7 @@ class UI {
     setTimeout(function() {
       document.querySelector(".alert").remove();
       document.querySelector(".loader").remove();
-    }, 6000);
+    }, 5000);
   }
 
   //remove table elements
@@ -531,13 +509,8 @@ class Store {
         let videos = JSON.parse(xhttp.responseText);
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
-        // converting it to an array!
-        // videos = Object.values(videos);
         //loading the table ui: looping through the videos and add it!
         ui.addVideos(videos, totalNumOfVideos, false);
-
-        console.log("displayVideos");
-
         //update the total number of videos!
         ui.displayTotalNumberOfVideos(Object.values(videos));
       }
@@ -653,7 +626,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Store.loadJSON();
 
   // getting the load time
-  let t1 = performance.now();
+  // let t1 = performance.now();
   // get the actual data an displaying it!
   document.querySelector(".datum").innerText = ui.getActualDate();
   // Store.displayVideos();
@@ -663,11 +636,10 @@ document.addEventListener("DOMContentLoaded", () => {
     var date = new Date().toISOString().substring(0, 10),
       field = document.querySelector(".videoDate");
     field.value = date;
-    // console.log(field.value);
   })();
 
-  let t2 = performance.now();
-  console.log(`Load Time Elapsed: ${(t2 - t1) / 1000} seconds`);
+  // let t2 = performance.now();
+  // console.log(`Load Time Elapsed: ${(t2 - t1) / 1000} seconds`);
 });
 
 /* SUBMIT
@@ -774,18 +746,15 @@ document.querySelector("#submit").addEventListener("click", function(e) {
  * Local Storage. In this case, will not be generate a JSON file.
  */
 document.querySelector(".videoList").addEventListener("click", function(e) {
-  let t1 = performance.now();
+  // let t1 = performance.now();
   if (e.target.parentElement.className === "delete") {
     let answer = confirm("Möchten Sie das Video wirklich löschen?");
     if (answer) {
-      // let passTarget = e.target.parentElement;
-      //deleting already
-      // e.target.parentElement.parentElement.remove();
       ui.deleteVideo(e.target.parentElement);
     }
   }
-  let t2 = performance.now();
-  console.log(`Delete Time Elapsed: ${(t2 - t1) / 1000} seconds`);
+  // let t2 = performance.now();
+  // console.log(`Delete Time Elapsed: ${(t2 - t1) / 1000} seconds`);
   if (e.target.parentElement.className === "infosreload")
     ui.reloadVideoData(e.target.parentElement);
 });
@@ -894,16 +863,16 @@ document.querySelector(".deleteAllVideos").addEventListener("click", () => {
   // alert("this function is deaktivated!");
   let answer = confirm("Möchten Sie ALLE VIDEOS wirklich löschen?");
   if (answer) {
-    let t1 = performance.now();
+    // let t1 = performance.now();
     localStorage.clear();
     // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
     // It basically load the localstorage to an variable, convert it to JSON and download it.
     Store.downloadVideosToJSON();
     // location.reload();
-    let t2 = performance.now();
-    console.log(
-      `Clear Table & Load Page Time Elapsed: ${(t2 - t1) / 1000} seconds`
-    );
+    // let t2 = performance.now();
+    // console.log(
+    //   `Clear Table & Load Page Time Elapsed: ${(t2 - t1) / 1000} seconds`
+    // );
     // Reload the page to update the table(1).json to table.json
     setTimeout(function() {
       location.reload();

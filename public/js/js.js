@@ -297,9 +297,7 @@ class UI {
         ////////////////////
 
         //update the total number of videos!
-        document.querySelector(
-          ".numberTotalOfVideos"
-        ).innerText = `${videos.length}`;
+        ui.displayTotalNumberOfVideos();
       }
     };
     xhttp.open("GET", "./table.json", true);
@@ -396,6 +394,14 @@ class UI {
     }
   }
 
+  //display number total of videos
+  displayTotalNumberOfVideos(videos = []) {
+    //update the total number of videos!
+    document.querySelector(".numberTotalOfVideos").innerText = `${
+      Object.values(videos).length
+    }`;
+  }
+
   //Writing the Date in the table in another format
   newDateFormat(date) {
     let stringArray = date.split("");
@@ -451,9 +457,7 @@ class Store {
 
     ui.addVideos(videos, totalNumOfVideos, reverseAddTable);
     //update the total number of videos!
-    document.querySelector(
-      ".numberTotalOfVideos"
-    ).innerText = `${videos.length}`;
+    ui.displayTotalNumberOfVideos(videos);
   }
 
   // Add Video to localStorage: we get the stored videos, add the new (push), then
@@ -477,9 +481,7 @@ class Store {
       delete videos[videoToDelete];
       //update the total number of videos!
       // let totalNumberOfVideos = parseInt(document.querySelector(".numberTotalOfVideos").innerText)-1;
-      document.querySelector(".numberTotalOfVideos").innerText = `${
-        Object.keys(videos).length
-      }`;
+      ui.displayTotalNumberOfVideos(Object.values(videos));
       //rewriting localStorage
       // localStorage.clear();
       localStorage.setItem("videos", JSON.stringify(videos));
@@ -540,9 +542,7 @@ class Store {
         console.log("displayVideos");
 
         //update the total number of videos!
-        document.querySelector(
-          ".numberTotalOfVideos"
-        ).innerText = `${videos.length}`;
+        ui.displayTotalNumberOfVideos(Object.values(videos));
       }
     };
     xhttp.open("GET", "./table.json", true);
@@ -737,9 +737,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           // Add video to LocalStorage: push the new video to LocalStorage
           Store.addVideo(videos, video);
           //increment the number of videos in case of adding it
-          document.querySelector(".numberTotalOfVideos").innerText = `${
-            Object.values(videos).length
-          }`;
+          // ui.displayTotalNumberOfVideos(Object.values(videos));
           // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
           // It basically load the localstorage to an variable, convert it to JSON and download it.
           Store.downloadVideosToJSON(videos);
@@ -758,9 +756,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         ////////////////////////////////
 
         //update the total number of videos!
-        document.querySelector(
-          ".numberTotalOfVideos"
-        ).innerText = `${videos.length}`;
+        ui.displayTotalNumberOfVideos(Object.values(videos));
       }
     };
     xhttp.open("GET", "./table.json", true);

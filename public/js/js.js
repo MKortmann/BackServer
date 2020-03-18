@@ -267,7 +267,7 @@ class UI {
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
         // converting it to an array!
-        videos = Object.values(videos);
+        // videos = Object.values(videos);
         // table clear!
         UI.removeTableElements();
         // let taskList = document.querySelector(".videoList");
@@ -289,7 +289,7 @@ class UI {
         ui.showAlert(`Das Video wurde gelöscht!`, "success");
         // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
         // It basically load the localstorage to an variable, convert it to JSON and download it.
-        Store.downloadVideosToJSON();
+        Store.downloadVideosToJSON(videos);
         // Reload the page to update the table(1).json to table.json
         setTimeout(function() {
           location.reload();

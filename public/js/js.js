@@ -144,6 +144,8 @@ class UI {
   addVideos(videos, totalNumOfVideos, reverseAddTable = false) {
     //start variable set the start. If we have less than 20 videos, then the start is 1
     let start = 1;
+    //transform an object to an array
+    videos = Object.values(videos);
     if (videos.length >= totalNumOfVideos) {
       start = videos.length - totalNumOfVideos + 1;
     }
@@ -176,7 +178,7 @@ class UI {
       // Video id
       // Get the total Number of Videos (true means: get only the total number of videos)
       // id = Store.getVideosFromLS(true) + 1;
-      id = videos.length + 1;
+      id = Object.values(videos).length + 1;
     } else {
       id = index;
     }
@@ -459,8 +461,9 @@ class Store {
   static addVideo(videos, video) {
     // let videos = Store.getVideosFromLS();
     // add to
-    // videos[video["dateiName"]] = video;
-    videos.push({ ...video });
+    // videos = Object.keys(videos);
+    videos[video["dateiName"]] = { ...video };
+    // videos.push({ ...video });
     localStorage.setItem("videos", JSON.stringify(videos));
   }
 
@@ -734,9 +737,9 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           // Add video to LocalStorage: push the new video to LocalStorage
           Store.addVideo(videos, video);
           //increment the number of videos in case of adding it
-          document.querySelector(
-            ".numberTotalOfVideos"
-          ).innerText = `${videos.length}`;
+          document.querySelector(".numberTotalOfVideos").innerText = `${
+            Object.values(videos).length
+          }`;
           // Save it to JSON: extra backup! After savingToLocalStorageTheJSON file will be downlaoded.
           // It basically load the localstorage to an variable, convert it to JSON and download it.
           Store.downloadVideosToJSON(videos);

@@ -72,11 +72,11 @@ const server = http.createServer((req, res) => {
       fs.exists(path.join(__dirname, "public", "table (1).json"), exists => {
         if (exists) {
           console.log("yes!");
-          try {
-            fs.unlinkSync(path.join(__dirname, "public", "table.json"));
-          } catch (err) {
-            console.log("Error, while deleting the file" + err);
-          }
+          // try {
+          //   fs.unlinkSync(path.join(__dirname, "public", "table.json"));
+          // } catch (err) {
+          //   console.log("Error, while deleting the file" + err);
+          // }
           try {
             fs.renameSync(
               path.join(__dirname, "public", "table (1).json"),

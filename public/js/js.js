@@ -119,7 +119,9 @@ let video = new Video();
 // globalDupAndLoadInf = global Variable For Duplicates and Used To Load Information To Input Fields
 let globalDupAndLoadInf = {};
 // total number of videos to be displayed
-let totalNumOfVideos = 20;
+let totalNumOfVideos = 30;
+// global time for reload page
+let reloadTime = 3000;
 /**
  * Creates an UI object video with the necessary methods to manipulate the DOM (Document Object Model).
  * @class
@@ -273,7 +275,7 @@ class UI {
         // Reload the page to update the table(1).json to table.json
         setTimeout(function() {
           location.reload();
-        }, 5000);
+        }, reloadTime);
       }
     };
     xhttp.open("GET", "./table.json", true);
@@ -473,7 +475,7 @@ class Store {
     // trying to save it as a file
     /*setting*/
     if (!videos) {
-      const videos = Store.getVideosFromLS();
+      videos = Store.getVideosFromLS();
     }
     // videos = Object.values(videos);
     const fileJSON = JSON.stringify(videos);
@@ -653,7 +655,7 @@ document.addEventListener("DOMContentLoaded", () => {
  * 6) Clear all the input fields!
  */
 document.querySelector("#submit").addEventListener("click", function(e) {
-  const t1 = performance.now();
+  // const t1 = performance.now();
   video.getFormData();
 
   // Validate inputs
@@ -689,8 +691,6 @@ document.querySelector("#submit").addEventListener("click", function(e) {
         let videos = JSON.parse(xhttp.responseText);
         // Storing the table in the Local Storage
         localStorage.setItem("videos", JSON.stringify(videos));
-        // converting it to an array!
-        // let videos = Object.values(videosLS);
         // clearing the table
         UI.removeTableElements();
         // clearing the global array
@@ -720,7 +720,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           // Reload the page to update the table(1).json to table.json
           setTimeout(function() {
             location.reload();
-          }, 5000);
+          }, reloadTime);
         }
         ////////////////////////////////
 
@@ -738,8 +738,8 @@ document.querySelector("#submit").addEventListener("click", function(e) {
   }
   e.preventDefault();
 
-  const t2 = performance.now();
-  console.log(`Submit Time Elapsed: ${(t2 - t1) / 1000} seconds.`);
+  // const t2 = performance.now();
+  // console.log(`Submit Time Elapsed: ${(t2 - t1) / 1000} seconds.`);
 });
 /* DELETE THE VIDEO
  * If the user clicked in the X field, it will clear the video and update the

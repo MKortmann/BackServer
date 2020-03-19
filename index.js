@@ -8,6 +8,8 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 
+let counter = 0;
+
 // http.createServer([options][, requestListener])
 // more infos: https://nodejs.org/dist/latest-v12.x/docs/api/http.html#http_http_createserver_options_requestlistener
 const server = http.createServer((req, res) => {
@@ -85,13 +87,21 @@ const server = http.createServer((req, res) => {
           } catch (err) {
             console.log("Error, while renaming the file" + err);
           }
-          //ASYNC:
-          // fs.rename(path.join(__dirname, "public", "table (1).json"), path.join(__dirname, "public", "table.json"), (err) => {
-          //     console.log("Error while renaming the file: " + err);
-          // })
-          // fs.unlink(path.join(__dirname, "public", "table (1).json"), (err) => {
-          //     console.log("Error while deleting the file: " + err);
-          // });
+          //get the total number of files in storage folder
+          fs.readdir(path.join(__dirname, "public/storage"), (err, files) => {
+            counter = files.length + 1;
+            console.log(counter);
+            //copy the file to storage for backup reasons!
+            fs.copyFile(
+              path.join(__dirname, "public", "table.json"),
+              // path.join(__dirname, "public/storage", "table.json"),
+              path.join(__dirname, "public/storage", `table${counter}.json`),
+              err => {
+                if (err) throw err;
+                console.log("table.json was copied to storage folder!");
+              }
+            );
+          });
         }
       });
 

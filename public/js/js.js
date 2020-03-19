@@ -894,3 +894,9 @@ document.querySelector(".showAllVideos").addEventListener("click", () => {
   const reverseAddTable = true;
   Store.displayVideos(reverseAddTable);
 });
+
+//go up (scroll up)
+document.querySelector(".goUp").addEventListener("click", () => {
+  // scroll to top (x-coord, y-coord)
+  window.scrollTo(0, 0);
+});

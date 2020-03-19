@@ -311,8 +311,16 @@ button {
   /* border: 1px solid black; */
   margin-bottom: 0;
 }
+.goUp {
+  background: url("../icons/goUP.svg") no-repeat;
+  background-color: white;
+  background-position: center;
+  /* border: 1px solid black; */
+  /* margin-bottom: 0; */
+}
 
-.reload:hover {
+.reload:hover,
+.goUp:hover {
   background-color: #0fa0ce;
 }
 

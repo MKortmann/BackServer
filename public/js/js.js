@@ -358,7 +358,8 @@ class UI {
     setTimeout(function () {
       document.querySelector(".alert").remove();
       document.querySelector(".loader").remove();
-    }, 5000);
+      document.querySelector("#fountainG").remove();
+    }, 3000);
   }
 
   //remove table elements
@@ -719,9 +720,9 @@ document.querySelector("#submit").addEventListener("click", function (e) {
           // Clear Fields
           ui.clearFields();
           // Reload the page to update the table(1).json to table.json
-          setTimeout(function () {
-            location.reload();
-          }, location.reload);
+          // setTimeout(function() {
+          //   location.reload();
+          // }, reloadTime);
         }
         ////////////////////////////////
 

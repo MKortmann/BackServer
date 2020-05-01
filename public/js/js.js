@@ -193,9 +193,9 @@ class UI {
           video.dsfS[1],
           video.dsfS[2],
           video.dsfS[3],
-          video.dsfS[4]
+          video.dsfS[4],
         ],
-        leitungName: video.leitungName
+        leitungName: video.leitungName,
       };
       video["notStoreSkip"] = false;
     } else {
@@ -247,7 +247,7 @@ class UI {
     var xhttp = new XMLHttpRequest();
     // we will use now onload instead of onreadystatechange. So we do not need
     // to check for this.readyState
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       // xhttp.onreadystatechange = function() {
       // readyState 4: the response has been capture and can be used
       // status: http status of 200 means that everything is ok
@@ -273,14 +273,15 @@ class UI {
         // It basically load the localstorage to an variable, convert it to JSON and download it.
         Store.downloadVideosToJSON(videos);
         // Reload the page to update the table(1).json to table.json
-        setTimeout(function() {
-          location.reload();
-        }, reloadTime);
+        // COMMENTED TO NOT RELOAD IT
+        // setTimeout(function() {
+        //   location.reload();
+        // }, reloadTime);
       }
     };
     xhttp.open("GET", "./table.json", true);
 
-    xhttp.onerror = function() {
+    xhttp.onerror = function () {
       alert(
         "Please, restart the localserver in terminal! Open the App-Root-Folder with cmd and type: node index .Error on XMLHttpRequest"
       );
@@ -354,7 +355,7 @@ class UI {
     // document.querySelector("body").style.backgroundColor = "#137b85";
 
     //the message should disappear after 3 seconds
-    setTimeout(function() {
+    setTimeout(function () {
       document.querySelector(".alert").remove();
       document.querySelector(".loader").remove();
     }, 5000);
@@ -385,7 +386,7 @@ class UI {
       month = [],
       year = [];
     let index = 0;
-    stringArray.forEach(function(item) {
+    stringArray.forEach(function (item) {
       if (index === 0) {
         year.push(item);
       } else if (index === 1) {
@@ -500,7 +501,7 @@ class Store {
     var xhttp = new XMLHttpRequest();
     // we will use now onload instead of onreadystatechange. So we do not need
     // to check for this.readyState
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       // xhttp.onreadystatechange = function() {
       // readyState 4: the response has been capture and can be used
       // status: http status of 200 means that everything is ok
@@ -519,7 +520,7 @@ class Store {
     };
     xhttp.open("GET", "./table.json", true);
 
-    xhttp.onerror = function() {
+    xhttp.onerror = function () {
       alert("Please, restart the live-server!!!, Error on XMLHttpRequest");
       console.log("Request error in XMLHttpRequest...");
     };
@@ -536,7 +537,7 @@ class Store {
  */
 document
   .querySelector(".loadTableFromJSON")
-  .addEventListener("click", function() {
+  .addEventListener("click", function () {
     let answer = confirm("Möchten Sie die Datei table.js laden?");
     if (answer) {
       //clearing the store data from local STORAGE
@@ -561,7 +562,7 @@ document
  */
 document
   .querySelector(".downloadVideoToJSON")
-  .addEventListener("click", function() {
+  .addEventListener("click", function () {
     let answer = confirm("Möchten Sie die Datei table.js herunterladen?");
     if (answer) {
       Store.downloadVideosToJSON();
@@ -577,14 +578,14 @@ document
  */
 document
   .querySelector(".openSelectVideoFile")
-  .addEventListener("click", function() {
+  .addEventListener("click", function () {
     // open a file selection dialog: the folder path will be set always through the last
     // added video. It is automatically and we cannot change here.
     // Important: we need to get only the video data!
     const input = document.createElement("input");
     input.type = "file";
     // handle the selected file
-    input.onchange = e => {
+    input.onchange = (e) => {
       const file = e.target.files[0];
       document.querySelector(".openSelectVideoFile").innerText = file.name;
       video.getLocalVideoInfos(file.name, file.size, file.type);
@@ -597,7 +598,7 @@ document
  */
 document
   .querySelector(".toggleContainer")
-  .addEventListener("click", function() {
+  .addEventListener("click", function () {
     if (document.querySelector(".container").classList.contains("openClose")) {
       document.querySelector(".toggleContainer").innerText =
         "Eingabeformular schließen";
@@ -634,7 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Store.displayVideos();
   //Load the input field with the actual date
   //reorganizing the data before to upload
-  (function() {
+  (function () {
     var date = new Date().toISOString().substring(0, 10),
       field = document.querySelector(".videoDate");
     field.value = date;
@@ -654,7 +655,7 @@ document.addEventListener("DOMContentLoaded", () => {
  * 5) Show the success message
  * 6) Clear all the input fields!
  */
-document.querySelector("#submit").addEventListener("click", function(e) {
+document.querySelector("#submit").addEventListener("click", function (e) {
   // const t1 = performance.now();
   video.getFormData();
 
@@ -680,7 +681,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
     var xhttp = new XMLHttpRequest();
     // we will use now onload instead of onreadystatechange. So we do not need
     // to check for this.readyState
-    xhttp.onload = function() {
+    xhttp.onload = function () {
       // xhttp.onreadystatechange = function() {
       // readyState 4: the response has been capture and can be used
       // status: http status of 200 means that everything is ok
@@ -718,9 +719,9 @@ document.querySelector("#submit").addEventListener("click", function(e) {
           // Clear Fields
           ui.clearFields();
           // Reload the page to update the table(1).json to table.json
-          setTimeout(function() {
-            location.reload();
-          }, reloadTime);
+          // setTimeout(function() {
+          //   location.reload();
+          // }, reloadTime);
         }
         ////////////////////////////////
 
@@ -730,7 +731,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
     };
     xhttp.open("GET", "./table.json", true);
 
-    xhttp.onerror = function() {
+    xhttp.onerror = function () {
       alert("Please, restart the live-server!!!, Error on XMLHttpRequest");
       console.log("Request error in XMLHttpRequest...");
     };
@@ -745,7 +746,7 @@ document.querySelector("#submit").addEventListener("click", function(e) {
  * If the user clicked in the X field, it will clear the video and update the
  * Local Storage. In this case, will not be generate a JSON file.
  */
-document.querySelector(".videoList").addEventListener("click", function(e) {
+document.querySelector(".videoList").addEventListener("click", function (e) {
   // let t1 = performance.now();
   if (e.target.parentElement.className === "delete") {
     let answer = confirm("Möchten Sie das Video wirklich löschen?");
@@ -874,7 +875,7 @@ document.querySelector(".deleteAllVideos").addEventListener("click", () => {
     //   `Clear Table & Load Page Time Elapsed: ${(t2 - t1) / 1000} seconds`
     // );
     // Reload the page to update the table(1).json to table.json
-    setTimeout(function() {
+    setTimeout(function () {
       location.reload();
     }, 500);
   }

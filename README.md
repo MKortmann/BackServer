@@ -1,6 +1,6 @@
-# Video Archive 2
+# Pegasus 
 
-The Video Archive 2 keeps the same idea as Video Archive 1. The idea is to develop a mobile web friendly web application to store and manage **video files** with a very easy and clean user interface.
+Pegasus is a video archive that keeps the same idea as Video Archive 1 (in my repository). The idea is to develop a mobile web friendly web application to store and manage **video files** with a very easy and clean user interface.
 Looking to the point from the programmer, I developed it simple as possible using only:
   * html
   * css 

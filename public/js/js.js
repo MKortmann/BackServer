@@ -347,7 +347,7 @@ class UI {
     // insert loading
     if (className !== "error") {
       document.querySelector("#fountainG").classList.remove("noDisplay");
-      document.querySelector(".decoText").innerText = "Page wird geladen";
+      // document.querySelector(".decoText").innerText = "Page wird geladen";
     }
     // scroll to top (x-coord, y-coord)
     window.scrollTo(0, 0);

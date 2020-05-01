@@ -360,7 +360,7 @@ class UI {
       document.querySelector("#fountainG").classList.add("noDisplay");
       document.querySelector(".alert").remove();
       document.querySelector(".loader").remove();
-    }, 3000);
+    }, 1000);
   }
 
   //remove table elements

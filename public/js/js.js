@@ -719,9 +719,9 @@ document.querySelector("#submit").addEventListener("click", function (e) {
           // Clear Fields
           ui.clearFields();
           // Reload the page to update the table(1).json to table.json
-          // setTimeout(function() {
-          //   location.reload();
-          // }, reloadTime);
+          setTimeout(function () {
+            location.reload();
+          }, location.reload);
         }
         ////////////////////////////////
 

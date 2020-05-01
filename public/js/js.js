@@ -345,10 +345,10 @@ class UI {
     // insert alert
     container.insertBefore(div, form);
     // insert loading
-    // if (className !== "error") {
-    //   document.querySelector("#fountainG").classList.remove("noDisplay");
-    //   document.querySelector(".decoText").innerText = "Page wird geladen";
-    // }
+    if (className !== "error") {
+      document.querySelector("#fountainG").classList.remove("noDisplay");
+      document.querySelector(".decoText").innerText = "Page wird geladen";
+    }
     // scroll to top (x-coord, y-coord)
     window.scrollTo(0, 0);
     // changing the background color
@@ -356,9 +356,10 @@ class UI {
 
     //the message should disappear after 3 seconds
     setTimeout(function () {
+      // document.querySelector("#fountainG").remove();
+      document.querySelector("#fountainG").classList.add("noDisplay");
       document.querySelector(".alert").remove();
       document.querySelector(".loader").remove();
-      // document.querySelector("#fountainG").remove();
     }, 3000);
   }
 

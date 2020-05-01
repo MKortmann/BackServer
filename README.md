@@ -30,7 +30,9 @@ basically with only 400 lines of code.
 ## How to start the App?
 
  To use the app, please, click in the link:
- https://mkortmann.github.io/Video-Archive/
+ https://mkortmann.github.io/Pegasus/public/
+ 
+ However, it will not work as it should because it is configure to run with a local backend server. Anyway, you can play a little with  it.
  
  I really advise you to install the app! To do so, please, follow the instructions at Installation section. 
  **I advise you to install the program only in one pc and let the people access this pc remotely or locally with a local account!** The videos should be at an ordner in a server (to be edited in the js file (line 102) and the JSON file locally but also copied daily to a server. Security reasons in case of computer crash.

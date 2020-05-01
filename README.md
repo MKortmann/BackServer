@@ -5,9 +5,9 @@ Looking to the point from the programmer, I developed it simple as possible usin
   * html
   * css 
   * javascript
+  * a little of Node.js for backend.
  
- **You do not need a databank! No Node.JS, No PHP, Nothing! The code store the necessary information in LocalStorage and for security 
-    exports it to a JSON file. In case your local storage is cleared, you can simple load it from JSON.** We are using XmlHttpRequest (XHR) object to get the data from the computer that in this case is/can be your server.
+ ** The code is store in a local JSON file. ** We are using XmlHttpRequest (XHR) object to get the data from the computer that in this case is/can be your server.
    
 I used only one library called: skeleton. It is: a dead simple, responsive boilerplate. It is composed 
 basically with only 400 lines of code.
@@ -19,20 +19,17 @@ basically with only 400 lines of code.
     * Remove and Add input form
     * Any submit or delete is automatically saved as backup in a JSON file
     * If Local Storage is empty, load a JSON file
+    * popUp to let the user to select a JSON file.
+    * re-edit the specification of any uploaded video
+    * reload the input box with the last added specification
+    * improved time & date inputs
  
-## In Development
-
-  - popUp to let the user to select a JSON file.
-  - re-edit the specification of any uploaded video
-  - reload the input box with the last added specification
-  - improve time & date inputs
-
 ## How to start the App?
 
  To use the app, please, click in the link:
  https://mkortmann.github.io/Pegasus/public/
  
- However, it will not work as it should because it is configure to run with a local backend server. Anyway, you can play a little with  it.
+ *However, it will not work as it should because it is configure to run with a local backend server. Anyway, you can play a little with  it.*
  
  I really advise you to install the app! To do so, please, follow the instructions at Installation section. 
  **I advise you to install the program only in one pc and let the people access this pc remotely or locally with a local account!** The videos should be at an ordner in a server (to be edited in the js file (line 102) and the JSON file locally but also copied daily to a server. Security reasons in case of computer crash.
